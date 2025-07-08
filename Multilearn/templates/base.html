@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>MultiLearn</title>
+</head>
+<body>
+  {% if user.is_authenticated %}
+    <p>
+      Welcome, {{ user.username }} |
+      <a href="{% url 'dashboard' %}">Dashboard</a> |
+      <a href="{% url 'my_courses' %}">My Courses</a> |
+      <a href="{% url 'logout' %}">Logout</a>
+    </p>
+  {% endif %}
+  {% block content %}{% endblock %}
+</body>
+</html>
