@@ -3,6 +3,9 @@ from .forms import SignUpForm, LoginForm
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required 
 
+def landing_page(request):
+    return render(request, 'accounts/index_2.html')
+
 
 def signup_view(request):
     if request.method == 'POST':
