@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+  <h2>Search Courses</h2>
+  <form method="get" action="{% url 'search:search' %}">
+    <input type="text" name="q" placeholder="Search a topic..." value="{{ query }}">
+    <button type="submit">Search</button>
+  </form>
+
+  {% if query %}
+    <h3>Results for “{{ query }}”</h3>
+    {% if results %}
+      <ul>
+        {% for course in results %}
+            <li style="margin-bottom:2em;">
+                {% if course.id %}
+                    <h4><a href="{% url 'quizzes:course_detail' course.id %}">{{ course.title }}</a></h4>
+
+                        {% if course.source == "YouTube" %}
+                            <a href="{% url 'quizzes:course_detail' course.id %}">
+                                <iframe width="400" height="225" src="https://www.youtube.com/embed/{{ course.video_id }}"></iframe>
+                            </a>
+                        {% else %}
+                            <a href="{% url 'quizzes:course_detail' course.id %}">View Course
+                            <img src="{{ course.thumbnail }}" alt="{{ course.title }}" style="width:200px;">
+                            </a>
+                            <p><a href="{{ course.url }}" target="_blank">Go to {{ course.source }}</a></p>
+                        {% endif %}
+                {% else %}
+                    <!-- Fallback for course without ID -->
+                    <h4>{{ course.title }}</h4>
+                    {% if course.source == "YouTube" %}
+                        <iframe width="400" height="225" src="https://www.youtube.com/embed/{{ course.video_id }}"></iframe>
+                    {% else %}
+                        <img src="{{ course.thumbnail }}" alt="{{ course.title }}" style="width:200px;">
+                        <p><a href="{{ course.url }}" target="_blank">Go to {{ course.source }}</a></p>
+                    {% endif %}
+                    {% endif %}
+               
+
+
+            <p>{{ course.description }}</p>
+            <p>
+              Source: {{ course.source }} —
+              {% if course.is_paid %}
+                <span style="color:red;">Paid</span>
+              {% else %}
+                <span style="color:green;">Free</span>
+              {% endif %}
+            </p>
+
+            <form method="post" action="{% url 'quizzes:enroll_course' %}" style="display:inline;">
+              {% csrf_token %}
+              {% for field,value in course.items %}
+                <input type="hidden" name="{{ field }}" value="{{ value }}">
+              {% endfor %}
+              <button type="submit">Enroll</button>
+            </form>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>No results found for “{{ query }}.”</p>
+    {% endif %}
+  {% endif %}
+{% endblock %}
