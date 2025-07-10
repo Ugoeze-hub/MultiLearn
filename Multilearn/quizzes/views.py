@@ -3,6 +3,11 @@ from django.contrib.auth.decorators import login_required
 from django.forms.models import model_to_dict
 from django.utils import timezone
 from .models import *
+import logging
+from .forms import *
+from .utils import *
+
+logger = logging.getLogger(__name__)
 
 @login_required
 def enroll_course_by_url(request):
@@ -56,3 +61,95 @@ def mark_complete(request, enrollment_id):
     e.completion_date = timezone.now()
     e.save()
     return redirect('quizzes:my_courses')
+
+
+@login_required
+def create_quiz_view(request):
+    if request.method == 'POST':
+        topic = request.POST.get('topic')
+        difficulty = request.POST.get('difficulty', 'easy')
+        num_questions = request.POST.get('num_questions')
+
+        questions_data = generate_quiz(topic, difficulty, num_questions)
+
+        if questions_data:
+            quiz = Quiz.objects.create(
+                user=request.user,
+                topic=topic,
+                difficulty=difficulty,
+                total_questions=num_questions,
+            )
+
+            for q in questions_data:
+                question = Question.objects.create(
+                    quiz = quiz,
+                    text = q['question']
+                )
+
+                for label, option_text in zip(['A', 'B', 'C', 'D'], q['options']):
+                    Option.objects.create(
+                        question=question,
+                        label=label,
+                        text=option_text,
+                        is_correct=(option_text == q['answer'])
+                    )
+
+            return redirect('quizzes:take_quiz', quiz_id=quiz.id)
+        
+        return render(request, 'quizzes/error.html', {
+            'message': 'Failed to generate quiz. Please try again.'
+        })
+
+    return render(request, 'quizzes/create_quiz.html')
+
+
+
+@login_required
+def take_quiz_view(request, quiz_id):
+    quiz = Quiz.objects.get(id=quiz_id, user=request.user)
+    questions = quiz.questions.all()
+
+    if request.method == 'POST':
+        form = QuizForm(request.POST, questions=questions)
+        if form.is_valid():
+            score = 0
+
+            UserAnswer.objects.filter(quiz=quiz, user=request.user).delete()
+
+            for i, question in enumerate(questions):
+                user_answer = form.cleaned_data[f'question_{i}']
+                # simple check: did they pick the same letter as correct_answer?
+                try:
+
+                    selected_opt = question.options.get(label=user_answer)
+
+                    UserAnswer.objects.create(
+                        user=request.user,
+                            quiz=quiz,
+                            question=question,
+                            option=selected_opt
+                    )
+
+                    if selected_opt.is_correct:
+                        score += 1
+
+                except Option.DoesNotExist:
+                    continue
+
+            quiz.score = score
+            quiz.save()
+            return redirect('quizzes:quiz_result', quiz_id=quiz.id)
+        
+        else:
+            form = QuizForm(questions=questions)
+
+        return render(request, 'quizzes/take_quiz.html', {
+        'quiz': quiz,
+        'form': form
+    })
+        
+
+@login_required
+def quiz_result_view(request, quiz_id):
+    quiz = Quiz.objects.get(id=quiz_id, user=request.user)
+    return render(request, 'quizzes/result.html', {'quiz': quiz})

@@ -1,0 +1,9 @@
+<!-- quizzes/templates/quizzes/error.html -->
+
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>Something went wrong 😓</h2>
+  <p>{{ error }}</p>
+  <a href="{% url 'quizzes:create_quiz' %}">Try again</a>
+{% endblock %}

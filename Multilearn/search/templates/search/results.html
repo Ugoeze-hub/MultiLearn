@@ -7,6 +7,38 @@
     <button type="submit">Search</button>
   </form>
 
+  {% if not query and recommendations %}
+    <h3>Recommended Based on Your Previous Searches</h3>
+    <ul>
+      {% for course in recommendations %}
+        <li style="margin-bottom:1.5em;">
+          <h4>{{ course.title }}</h4>
+          {% if course.source == "Youtube" %}
+            <iframe width="400" height="225" src="https://www.youtube.com/embed/{{ course.video_id }}"></iframe>
+          {% else %}
+            <img src="{{ course.thumbnail }}" style="width:200px;" alt="{{ course.title }}">
+            <p><a href="{{ course.url }}" target="_blank">Go to {{ course.source }}</a></p>
+          {% endif %}
+          <p>{{ course.description }}</p>
+          <p>Source: {{ course.source }} — {% if course.is_paid %}<span style="color:red;">Paid</span>{% else %}<span style="color:green;">Free</span>{% endif %}</p>
+        </li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+
+
+  {% if tags %}
+    <div style="margin: 1em 0;">
+      <h4>Related Topics:</h4>
+      <p>
+        {% for tag in tags %}
+          <a href="{% url 'search:search' %}?q={{ tag }}" style="margin-right: 10px; padding: 5px 10px; background: #eee; border-radius: 5px;">#{{ tag }}</a>
+        {% endfor %}
+      </p>
+    </div>
+  {% endif %}
+
+
   {% if query %}
     <h3>Results for “{{ query }}”</h3>
     {% if results %}
@@ -16,10 +48,8 @@
                 {% if course.id %}
                     <h4><a href="{% url 'quizzes:course_detail' course.id %}">{{ course.title }}</a></h4>
 
-                        {% if course.source == "YouTube" %}
-                            <a href="{% url 'quizzes:course_detail' course.id %}">
-                                <iframe width="400" height="225" src="https://www.youtube.com/embed/{{ course.video_id }}"></iframe>
-                            </a>
+                        {% if course.source == "Youtube" %}
+                          <iframe width="400" height="225" src="https://www.youtube.com/embed/{{ course.video_id }}"></iframe>
                         {% else %}
                             <a href="{% url 'quizzes:course_detail' course.id %}">View Course
                             <img src="{{ course.thumbnail }}" alt="{{ course.title }}" style="width:200px;">
