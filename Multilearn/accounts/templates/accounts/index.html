@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MyLearnQuest</title>
+    <link rel="icon" type="image/jpeg" href="/Multilearn/static/img/ico.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.8/css/line.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <link rel="stylesheet" href="/Multilearn/static/css/style.css" />
+  </head>
+
+  <body>
+    <div data-barba="wrapper">
+      <div data-barba="container" data-barba-namespace="home">
+        <nav>
+          <div class="container nav__container">
+            <a href="/"><h4>MyLearnQuest</h4></a>
+            <ul class="nav__menu">
+              <li><a href="/"><strong>Home</strong></a></li>
+              <li><a href="/service"><strong>Services</strong></a></li>
+              <li><a href="/contact"><strong>Contact</strong></a></li>
+              <li><a href="/team"><strong>Team</strong></a></li>
+            </ul>
+            <button
+              id="open-menu-btn"
+              aria-label="Open navigation menu"
+              aria-controls="nav-menu"
+              aria-expanded="false"
+            >
+              <i class="uil uil-bars"></i>
+            </button>
+            <button
+              id="close-menu-btn"
+              aria-label="Close navigation menu"
+              aria-controls="nav-menu"
+              aria-expanded="true"
+              style="display: none"
+            >
+              <i class="uil uil-multiply" aria-hidden="true"></i>
+            </button>
+          </div>
+        </nav>
+
+        <header>
+          <section class="hero container">
+  <div class="hero__text">
+    <h1>Discover the best learning resources across top platforms</h1>
+    <p>
+      <strong>
+        MyLearnQuest helps you find high-quality free and premium courses from YouTube, Udemy, Coursera and more.
+        We simplify your search for the perfect learning materials to advance your skills.
+      </strong>
+    </p>
+    <a href="/login" class="btn btn-primary">Get Started!</a>
+  </div>
+
+  <div class="hero__media">
+    <img src="/Multilearn/static/img/book.png" alt="Hero" class="hero__image" />
+  </div>
+</section>
+
+        </header>
+
+        <section class="categories">
+          <div class="container categories__container">
+            <div class="categories__left">
+              <h1>Our Learning Portals</h1>
+              <p>
+                <strong>
+                  MyLearnQuest connects you to the world's best free and premium learning resources.
+                  We don't host courses - we make it effortless to discover and access 
+                  educational content across top platforms.
+                </strong>
+              </p>
+              <a href="/login" class="btn">Start Learning Now</a>
+            </div>
+        
+            <div class="categories__right">
+              <article class="category">
+                <span class="category__icon">
+                  <i class="uil uil-youtube"></i>
+                </span>
+                <h5>YouTube</h5>
+                <p>
+                  <strong>
+                    The world's largest free video learning repository with millions of tutorials.
+                  </strong>
+                </p>
+              </article>
+        
+              <article class="category">
+                <span class="category__icon">
+                  <i class="uil uil-book-open"></i>
+                </span>
+                <h5>Udemy</h5>
+                <p>
+                  <strong>
+                    Affordable premium courses on virtually every subject imaginable.
+                  </strong>
+                </p>
+              </article>
+        
+              <article class="category">
+                <span class="category__icon">
+                  <i class="uil uil-graduation-cap"></i>
+                </span>
+                <h5>Coursera</h5>
+                <p>
+                  <strong>
+                    University-certified courses and degrees from top global institutions.
+                  </strong>
+                </p>
+              </article>
+        
+              <article class="category">
+                <span class="category__icon">
+                  <i class="uil uil-atom"></i>
+                </span>
+                <h5>Khan Academy</h5>
+                <p>
+                  <strong>
+                    Free world-class education for anyone, anywhere.
+                  </strong>
+                </p>
+              </article>
+        
+              <article class="category">
+                <span class="category__icon">
+                  <i class="uil uil-laptop"></i>
+                </span>
+                <h5>edX</h5>
+                <p>
+                  <strong>
+                    Open-source learning with courses from Harvard, MIT and others.
+                  </strong>
+                </p>
+              </article>
+        
+              <article class="category">
+                <span class="category__icon">
+                  <i class="uil uil-plus-circle"></i>
+                </span>
+                <h5>More Platforms</h5>
+                <p>
+                  <strong>
+                    Continuously adding new learning sources to serve you better.
+                  </strong>
+                </p>
+              </article>
+            </div>
+          </div>
+        </section>
+
+        <section class="faqs">
+          <h2>Frequently Asked Questions</h2>
+          <div class="container faqs__container">
+            <article class="faq">
+              <div class="faq__icon"><i class="uil uil-plus"></i></div>
+              <div class="question__answer">
+                <h4><strong>What is MyLearnQuest?</strong></h4>
+                <p>
+                  <strong>
+                    MyLearnQuest is a discovery platform that helps you find the best learning resources across multiple platforms. 
+                    We don't create courses - we help you discover existing high-quality content.
+                  </strong>
+                </p>
+              </div>
+            </article>
+
+            <article class="faq">
+              <div class="faq__icon"><i class="uil uil-plus"></i></div>
+              <div class="question__answer">
+                <h4>
+                  <strong>How does MyLearnQuest help me learn?</strong>
+                </h4>
+                <p>
+                  <strong>
+                    We save you time by recommending the best free and paid courses from platforms like YouTube, Udemy and Coursera 
+                    based on your learning goals and preferences.
+                  </strong>
+                </p>
+              </div>
+            </article>
+
+            <article class="faq">
+              <div class="faq__icon"><i class="uil uil-plus"></i></div>
+              <div class="question__answer">
+                <h4><strong>Does MyLearnQuest offer certificates?</strong></h4>
+                <p>
+                  <strong>
+                    While we don't issue certificates ourselves, we can help you find certificate programs offered by 
+                    platforms like Coursera and Udemy that match your needs.
+                  </strong>
+                </p>
+              </div>
+            </article>
+
+            <article class="faq">
+              <div class="faq__icon"><i class="uil uil-plus"></i></div>
+              <div class="question__answer">
+                <h4>
+                  <strong>Are the learning resources free?</strong>
+                </h4>
+                <p>
+                  <strong>
+                    We help you find both free resources (like YouTube tutorials) and premium courses. 
+                    You can filter by price to find options that fit your budget.
+                  </strong>
+                </p>
+              </div>
+            </article>
+
+            <article class="faq">
+              <div class="faq__icon"><i class="uil uil-plus"></i></div>
+              <div class="question__answer">
+                <h4>
+                  <strong>Can I track my learning progress?</strong>
+                </h4>
+                <p>
+                  <strong>
+                    While we don't host courses, we can recommend platforms with excellent progress tracking features 
+                    and help you find resources that match your learning pace.
+                  </strong>
+                </p>
+              </div>
+            </article>
+
+            <article class="faq">
+              <div class="faq__icon"><i class="uil uil-plus"></i></div>
+              <div class="question__answer">
+                <h4><strong>How can I contact support?</strong></h4>
+                <p>
+                  <strong>
+                    Our team is available to help you find the best learning resources. Contact us through email or 
+                    the contact form for personalized recommendations.
+                  </strong>
+                </p>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section class="container testimonials__container mySwiper" tabindex="0">
+          <div class="swiper-pagination"></div>
+          <h2>What Our Users Say</h2>
+          <div class="swiper-wrapper">
+            <article class="testimonial swiper-slide">
+              <div class="avatar">
+                <img src="/Multilearn/static/img/avtr.jpeg" alt="Mark Sylvester's Image" loading="lazy" />
+              </div>
+              <div class="testimonial__info">
+                <h5>Mark Sylvester</h5>
+                <small>BlockChain Analyst</small>
+              </div>
+              <div class="testimonial__body">
+                <p>
+                  <strong>
+                    "MyLearnQuest helped me discover the perfect blockchain tutorials across YouTube and Udemy that I would have never found on my own. Saved me countless hours of searching!"
+                  </strong>
+                </p>
+              </div>
+            </article>
+
+            <article class="testimonial swiper-slide">
+              <div class="avatar">
+                <img src="/Multilearn/static/img/avtr2.jpeg" alt="Mark Image" loading="lazy" />
+              </div>
+              <div class="testimonial__info">
+                <h5>Cole Mark</h5>
+                <small>Graphic Designer</small>
+              </div>
+              <div class="testimonial__body">
+                <p>
+                  <strong>
+                    "The curated design course recommendations from MyLearnQuest helped me advance my skills faster than ever. I found hidden gems on Coursera and YouTube I didn't know existed."
+                  </strong>
+                </p>
+              </div>
+            </article>
+
+            <article class="testimonial swiper-slide">
+              <div class="avatar">
+                <img src="/Multilearn/static/img/avtr3.jpeg" alt="James Anderson's Image" loading="lazy" />
+              </div>
+              <div class="testimonial__info">
+                <h5>Eluchie Ugoeze</h5>
+                <small>UI/UX Designer</small>
+              </div>
+              <div class="testimonial__body">
+                <p>
+                  <strong>
+                    "MyLearnQuest's smart filters helped me compare similar courses across different platforms to find the perfect fit for my learning style and budget."
+                  </strong>
+                </p>
+              </div>
+            </article>
+
+            <article class="testimonial swiper-slide">
+              <div class="avatar">
+                <img src="/Multilearn/static/img/avtr4.jpeg" alt="Lila Bennett's Image" loading="lazy" />
+              </div>
+              <div class="testimonial__info">
+                <h5>Lila Bennett</h5>
+                <small>Data Analyst</small>
+              </div>
+              <div class="testimonial__body">
+                <p>
+                  <strong>
+                    "As someone new to data science, MyLearnQuest helped me navigate the overwhelming number of course options and find the best beginner-friendly resources."
+                  </strong>
+                </p>
+              </div>
+            </article>
+
+            <article class="testimonial swiper-slide">
+              <div class="avatar">
+                <img src="/Multilearn/static/img/avtr5.jpeg" alt="Ethan Clarke's Image" loading="lazy" />
+              </div>
+              <div class="testimonial__info">
+                <h5>Ethan Clarke</h5>
+                <small>Web Developer</small>
+              </div>
+              <div class="testimonial__body">
+                <p>
+                  <strong>
+                    "MyLearnQuest's recommendations kept me updated with the most relevant web development tutorials across platforms, saving me hours of research time."
+                  </strong>
+                </p>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <footer>
+          <div class="container footer__container">
+            <div class="footer__1">
+              <a
+                href="/index"
+                class="footer__logo"
+                aria-label="Navigate to homepage"
+              >
+                <h4>MyLearnQuest</h4>
+              </a>
+              <p>
+                Your gateway to discovering the world's best learning resources across top platforms.
+              </p>
+            </div>
+    
+            <div class="footer__2">
+              <h4>Permalinks</h4>
+              <ul class="permalinks">
+                <li><a href="/index">Home</a></li>
+                <li><a href="/about">About</a></li>
+                <li><a href="/courses">Courses</a></li>
+                <li><a href="/contact">Contact</a></li>
+              </ul>
+            </div>
+    
+            <div class="footer__3">
+              <h4>Privacy</h4>
+              <ul class="privacy">
+                <li><a href="/privacy_policy">Privacy Policy</a></li>
+                <li>
+                  <a href="/terms_and_conditions">Terms and Conditions</a>
+                </li>
+                <li><a href="/refund_policy">Refund Policy</a></li>
+              </ul>
+            </div>
+    
+            <div class="footer__4">
+              <h4>Contact Us</h4>
+              <div>
+                <p>+2348055607241</p>
+                <p>+234055607241</p>
+                <p><a href="mailto:adewunmiazeez226@gmail.com">adewunmiazeez226@gmail.com</a></p>
+                <p><a href="mailto:covenantadesanya29@gmail.com">covenantadesanya29@gmail.com</a></p>
+              </div>
+              <ul class="social-links">
+                <li>
+                  <a href="https://www.facebook.com/venny.ade29" aria-label="Visit our Facebook page">
+                    <i class="uil uil-facebook-f"></i>
+                  </a>
+                </li>
+                <li>
+                  <a href="https://github.com/Spectre-prog" aria-label="Visit our GitHub profile">
+                    <i class="uil uil-github-alt"></i>
+                  </a>
+                </li>
+                <li>
+                  <a href="https://instagram.com" aria-label="Visit our Instagram profile">
+                    <i class="uil uil-instagram"></i>
+                  </a>
+                </li>
+                <li>
+                  <a href="#" aria-label="Visit our LinkedIn page">
+                    <i class="uil uil-linkedin-alt"></i>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </footer>
+      </div>
+    </div>
+    
+    <script src="https://unpkg.com/@barba/core"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="/Multilearn/static/java/main.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script>
+      var swiper = new Swiper(".mySwiper", {
+        slidesPerView: 1,
+        spaceBetween: 30,
+        keyboard: {
+          enabled: true,
+          onlyInViewport: true,
+        },
+        pagination: {
+          el: ".swiper-pagination",
+          clickable: true,
+          dynamicBullets: true,
+        },
+        breakpoints: {
+          600: {
+            slidesPerView: 2,
+          },
+        },
+      });
+    </script>
+  </body>
+</html>
