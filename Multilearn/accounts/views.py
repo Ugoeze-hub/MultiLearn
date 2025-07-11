@@ -20,7 +20,7 @@ def signup_view(request):
         form = SignUpForm(request.POST)
         if form.is_valid():
             form.save()  # Save the user but don't log in
-            return redirect('accounts:login')  # Redirect to login page
+            return redirect('quizzes:dashboard')  # Redirect to login page
     else:
         form = SignUpForm()
 
@@ -35,7 +35,7 @@ def login_view(request):
         if form.is_valid():
             user = form.get_user()
             login(request, user)
-            return redirect('/dashboard')
+            return redirect("quizzes:dashboard")
         
     else:
         form = LoginForm()

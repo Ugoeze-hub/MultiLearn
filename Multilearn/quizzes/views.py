@@ -4,6 +4,8 @@ from django.forms.models import model_to_dict
 from django.utils import timezone
 from django.db.models import Q, Count
 from .models import *
+from search.utils import fetch_courses
+from search.models import SearchHistory
 import logging
 from .forms import *
 from .utils import *
@@ -43,9 +45,21 @@ def my_courses_view(request):
 
 @login_required
 def dashboard_view(request):
-    enrolled_count = Enrollment.objects.filter(user=request.user).count()
-    return render(request, "quizzes/dashboard.html", {
-        "enrolled_count": enrolled_count
+    # enrolled_count = Enrollment.objects.filter(user=request.user).count()
+    enrollments = Enrollment.objects.filter(user=request.user)
+    search_query = request.GET.get('q', '')
+    past_searches = SearchHistory.objects.filter(user=request.user)
+    recommendations = []
+    if past_searches.exists():
+        recent_query = past_searches.latest('searched_at').query
+        recommendations, _, _ = fetch_courses(f'{recent_query} tutorial')
+    else:
+        recommendations, _, _ = fetch_courses('python tutorial')  # Default
+    return render(request, 'quizzes/dashboard.html', {
+        'recommendations': recommendations,
+        'enrollments': enrollments,
+        'search_query': search_query,
+        # "enrolled_count": enrolled_count
     })
 
 @login_required

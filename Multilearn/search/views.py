@@ -18,31 +18,30 @@ TAG_RECOMMENDATION_MAP = {
 @login_required
 def search_view(request):
     query = request.GET.get('q', '')
+    page = int(request.GET.get('page', 1))
     results = []
     tags = []
     recommended_courses = []
+    next_page_token=None
     
     if query:
         
         SearchHistory.objects.create(user=request.user, query=query)
 
         modified_query = f'{query} tutorial'
-        results = fetch_courses(modified_query)
+        results, next_page_token = fetch_courses(modified_query, page)
 
         tags = TAG_RECOMMENDATION_MAP.get(query.lower(), [])
 
         results = [course for course in results if course.get('title') and course.get('url')]
 
-    else:
-        past_searches = SearchHistory.objects.filter(user=request.user)
-        if past_searches.exists():
-
-            recent_query = past_searches.latest('searched_at').query
-            recommended_courses = fetch_courses(f'{recent_query} tutorial')
+ 
 
     return render(request, 'search/results.html', {
         'query': query,
         'results': results,
         'tags': tags,
-        'recommendations': recommended_courses
+        'recommendations': recommended_courses,
+        'page': page,
+        'next_page_token': next_page_token
         })

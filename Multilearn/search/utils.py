@@ -7,13 +7,14 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
-def fetch_youtube_courses(query, max_results=5):
+def fetch_youtube_courses(query, max_results=10, page_token=None):
     youtube = build('youtube', 'v3', developerKey=settings.YOUTUBE_API_KEY)
     search_resp = youtube.search().list(
         q=query,
         part='snippet', #this is to get the title, description fom the videos
         type='video', 
-        maxResults=max_results
+        maxResults=max_results,
+        pageToken=page_token
     ).execute()
     
     results = []
@@ -32,14 +33,15 @@ def fetch_youtube_courses(query, max_results=5):
         })
     print("YOUTUBE API KEY:", settings.YOUTUBE_API_KEY)
     print("Search Response:", search_resp)
-    return results
+    next_page_token = search_resp.get('nextPageToken')
+    return results, next_page_token
 
 
 def fetch_udemy_courses(query):
     url = f"https://www.udemy.com/api-2.0/courses/?search={query}&page_size=5"
     headers = { #this is to define a http to mimic an actual browser to prevemt blocks
         'Accept': 'application/json, text/plain, */*',
-        'User-Agent': ''
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
     }
 
     response = requests.get(url, headers=headers)
@@ -64,7 +66,7 @@ def fetch_udemy_courses(query):
 def fetch_cousera_courses(query):
     search_url = f"https://www.coursera.org/search?query={query}"
     headers = {
-        'User-Agent': 'Mozilla/5.0'
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
     }
     response = requests.get(search_url, headers=headers)
 
@@ -72,16 +74,17 @@ def fetch_cousera_courses(query):
     if response.status_code == 200:
         soup = BeautifulSoup(response.text, 'html.parser')
         
-        for card in soup.select('li.css-1t4z1g7')[:5]:
+        for card in soup.select('div.card'):
             title_tag = card.select_one('h2')
             descrip_tag = card.select_one('p')
-            link_tag = card.select_one('a')
+            link_tag = card.select_one('a[href*="/learn/"]')
             image_tag = card.select_one('img')
 
             if title_tag and link_tag:
                 results.append({
                     'title': title_tag.text.strip(),
                     'description': descrip_tag.text.strip() if descrip_tag else "",
+                    'url': f"https://www.coursera.org{link_tag['href']}",
                     'source': 'Coursera',
                     'thumbnail': image_tag['src'] if image_tag else "",
                     'is_paid': 'professional-certificate' in link_tag['href'] or 'specialization' in link_tag['href']
@@ -91,11 +94,16 @@ def fetch_cousera_courses(query):
     return results
             
 
-def fetch_courses(query):
+def fetch_courses(query, page=1, page_token=None):
+    youtube_results, next_page_token = fetch_youtube_courses(query, max_results=10, page_token=page_token)
+    coursera_results = fetch_cousera_courses(query)
+    
     results = []
-
-    results.extend(fetch_youtube_courses(query))
-    results.extend(fetch_udemy_courses(query))
-    results.extend(fetch_cousera_courses(query))
-    print("FINAL RESULTS:", results)
-    return results
+    max_length = max(len(youtube_results), len(coursera_results))
+    for i in range(max_length):
+        if i < len(youtube_results):
+            results.append(youtube_results[i])
+        if i < len(coursera_results):
+            results.append(coursera_results[i])
+    
+    return results, next_page_token, page

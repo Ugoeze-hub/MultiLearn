@@ -1,6 +1,27 @@
-<h2>Results for {{ quiz.topic }}</h2>
-<p>Your score: {{ quiz.score }}/{{ quiz.questions.count }}</p>
-<p><a href="{% url 'quizzes:create_quiz' %}">Try Another</a> </p>
-<p><a href="{% url 'quizzes:dashboard' %}">Back</a> </p>
-<a href="{% url 'quizzes:my_quizzes' %}">Other Results</a> |
+{% extends "quizzes/dashboard.html" %}
 
+{% block content %}
+<div class="search-container">
+    <h2>Results for {{ quiz.topic|title }} ({{ quiz.difficulty|title }})</h2>
+    <div class="course-card">
+        <div class="course-img">
+            <i class="fas fa-chart-line fa-3x"></i>
+        </div>
+        <div class="course-info">
+            <p><strong>Your Score:</strong> {{ quiz.score }} / {{ quiz.total_questions }}</p>
+            <p><strong>Date Taken:</strong> {{ quiz.taken_at|date:"Y-m-d H:i" }}</p>
+            <div style="margin-top: 1rem;">
+                <a href="{% url 'quizzes:create_quiz' %}" class="search-bar button" style="margin-right: 1rem;">
+                    <i class="fas fa-redo mr-2"></i>Try Another
+                </a>
+                <a href="{% url 'quizzes:my_quizzes' %}" class="search-bar button" style="margin-right: 1rem;">
+                    <i class="fas fa-list mr-2"></i>Other Results
+                </a>
+                <a href="{% url 'quizzes:dashboard' %}" class="search-bar button">
+                    <i class="fas fa-home mr-2"></i>Back to Dashboard
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
