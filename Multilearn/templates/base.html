@@ -1,7 +1,76 @@
 <!DOCTYPE html>
-<html>
+<html lang="en-us">
 <head>
-  <title>MultiLearn</title>
+  <!-- Basic Meta Tags -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  
+  <!-- SEO Meta Tags -->
+  <title>{% block title %}MultiLearn - Online Learning Platform | Courses, Quizzes & Certifications{% endblock %}</title>
+  <meta name="description" content="{% block description %}MultiLearn is a comprehensive online learning platform offering interactive courses, quizzes, and certifications. Learn programming, data science, web development and more with personalized recommendations.{% endblock %}">
+  <meta name="keywords" content="{% block keywords %}online learning, courses, quizzes, programming, web development, data science, education, certification, e-learning, tutorials{% endblock %}">
+  <meta name="author" content="MultiLearn Team">
+  <meta name="robots" content="index, follow">
+  <meta name="language" content="English">
+  <meta name="revisit-after" content="7 days">
+  
+  <!-- Open Graph Meta Tags (Facebook, LinkedIn) -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="MultiLearn">
+  <meta property="og:title" content="{% block og_title %}MultiLearn - Online Learning Platform{% endblock %}">
+  <meta property="og:description" content="{% block og_description %}Discover interactive courses, take quizzes, and earn certifications on MultiLearn. Your personalized learning journey starts here.{% endblock %}">
+  <meta property="og:image" content="{% block og_image %}{{ request.scheme }}://{{ request.get_host }}{% load static %}{% static 'img/icon.jpg' %}{% endblock %}">
+  <meta property="og:url" content="{{ request.build_absolute_uri }}">
+  <meta property="og:locale" content="en_US">
+  
+  <!-- Twitter Card Meta Tags -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@MultiLearn">
+  <meta name="twitter:creator" content="@MultiLearn">
+  <meta name="twitter:title" content="{% block twitter_title %}MultiLearn - Online Learning Platform{% endblock %}">
+  <meta name="twitter:description" content="{% block twitter_description %}Interactive courses, quizzes, and certifications. Start your learning journey with MultiLearn today.{% endblock %}">
+  <meta name="twitter:image" content="{% block twitter_image %}{{ request.scheme }}://{{ request.get_host }}{% load static %}{% static 'img/icon.jpg' %}{% endblock %}">
+  
+  <!-- Favicon and Icons -->
+  <link rel="icon" type="image/x-icon" href="{% load static %}{% static 'img/ico.png' %}">
+  <link rel="apple-touch-icon" sizes="180x180" href="{% load static %}{% static 'img/ico.png' %}">
+  <link rel="icon" type="image/png" sizes="32x32" href="{% load static %}{% static 'img/ico.png' %}">
+  <link rel="icon" type="image/png" sizes="16x16" href="{% load static %}{% static 'img/ico.png' %}">
+  
+  <!-- Canonical URL -->
+  <link rel="canonical" href="{% block canonical %}{{ request.build_absolute_uri }}{% endblock %}">
+  
+  <!-- Preconnect for Performance -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  
+  <!-- CSS Files -->
+  <link rel="stylesheet" href="{% load static %}{% static 'css/style.css' %}">
+  {% block extra_css %}{% endblock %}
+  
+  <!-- Schema.org Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "EducationalOrganization",
+    "name": "MultiLearn",
+    "description": "Online learning platform offering interactive courses, quizzes, and certifications",
+    "url": "{{ request.scheme }}://{{ request.get_host }}",
+    "logo": "{{ request.scheme }}://{{ request.get_host }}{% load static %}{% static 'img/icon.jpg' %}",
+    "sameAs": [
+      "https://twitter.com/MultiLearn",
+      "https://facebook.com/MultiLearn",
+      "https://linkedin.com/company/MultiLearn"
+    ],
+    "address": {
+      "@type": "PostalAddress",
+      "addressCountry": "US"
+    }
+  }
+  </script>
+  
+  {% block extra_head %}{% endblock %}
 </head>
 <body>
   {% if user.is_authenticated %}f
