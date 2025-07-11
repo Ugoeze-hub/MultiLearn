@@ -1,191 +1,112 @@
-:root {
-  --color-1: #0ef;
-  --color-2: #08c;
-  --color-3: #0f172a;
-  --color-4: #020617;
-  --color-5: #f8fafc;
-  --color-6: rgba(255, 255, 255, 0.05);
-  --color-7: rgba(255, 255, 255, 0.1);
-  --color-8: rgba(0, 238, 255, 0.3);
-  --color-9: rgba(0, 238, 255, 0.6);
-  --color-10: rgba(0, 0, 0, 0.2);
-  --color-11: rgba(2, 6, 23, 0.9);
-  --color-12: rgba(0, 0, 0, 0.3);
-  --color-13: #fff;
-  --color-14: rgba(0, 0, 0, 0.4);
-  --color-15: rgba(0, 238, 255, 0.15);
-  --color-16: rgba(0, 0, 0, 0.3);
-  --color-17: rgba(0, 238, 255, 0.1);
-  --color-18: rgba(0, 238, 255, 0.2);
-  --color-19: rgba(0, 0, 0, 0.7);
-  --color-20: rgba(0, 238, 255, 0.03);
-  --color-21: #ff00aa;
-  --color-22: rgba(0, 238, 255, 0.05);
-  --color-23: rgba(255, 255, 255, 0.2);
+/* login.css */
 
-  --primary: var(--color-1);
-  --primary-dark: var(--color-2);
-  --dark: var(--color-3);
-  --darker: var(--color-4);
-  --light: var(--color-5);
-  --glass: var(--color-6);
-  --glass-border: var(--color-7);
-}
-
-/* Base reset */
+/* Reset */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
+
+/* Background */
 body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(to right, #6c63ff, #4734d7);
   min-height: 100vh;
-  background: linear-gradient(
-    -45deg,
-    var(--darker),
-    var(--dark),
-    var(--primary-dark),
-    var(--darker)
-  );
-  background-size: 400% 400%;
-  animation: gradientBG 15s ease infinite;
-  color: var(--light);
-  overflow-x: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-/* Background animation */
-@keyframes gradientBG {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
-}
-
-/* Bubble Background Animation */
-.bubbles {
-  position: fixed;
+.bubble-background {
+  position: relative;
   width: 100%;
-  height: 100%;
-  z-index: -1;
+  height: 100vh;
   overflow: hidden;
-  top: 0;
-  left: 0;
 }
 
-.bubble {
-  position: absolute;
-  bottom: -100px;
-  background: var(--color-8);
-  border-radius: 50%;
-  opacity: 0.5;
-  animation: rise 15s infinite ease-in;
+/* Container */
+.login-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
 }
 
-.bubble:nth-child(1) {
-  width: 40px;
-  height: 40px;
-  left: 10%;
-  animation-duration: 8s;
-  background: var(--color-9);
+/* Login Box */
+.login-box {
+  background: #fff;
+  padding: 2.5rem 2rem;
+  border-radius: 1rem;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  width: 90%;
+  max-width: 400px;
+  text-align: center;
+  animation: fadeIn 1s ease-in;
 }
 
-.bubble:nth-child(2) {
-  width: 20px;
-  height: 20px;
-  left: 20%;
-  animation-duration: 5s;
-  animation-delay: 1s;
-  background: var(--color-17);
+/* Form Styling */
+.login-box h2 {
+  margin-bottom: 1rem;
+  color: #333;
 }
 
-.bubble:nth-child(3) {
-  width: 50px;
-  height: 50px;
-  left: 35%;
-  animation-duration: 7s;
-  animation-delay: 2s;
-  background: var(--color-18);
+.login-box form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
-.bubble:nth-child(4) {
-  width: 80px;
-  height: 80px;
-  left: 50%;
-  animation-duration: 11s;
-  animation-delay: 0s;
-  background: var(--color-8);
+.login-box form input {
+  padding: 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 0.5rem;
+  font-size: 1rem;
 }
 
-.bubble:nth-child(5) {
-  width: 35px;
-  height: 35px;
-  left: 55%;
-  animation-duration: 6s;
-  animation-delay: 1s;
-  background: var(--color-9);
+.login-box button {
+  padding: 0.75rem;
+  border: none;
+  background: #6c63ff;
+  color: #fff;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background 0.3s ease;
 }
 
-.bubble:nth-child(6) {
-  width: 45px;
-  height: 45px;
-  left: 65%;
-  animation-duration: 8s;
-  animation-delay: 3s;
-  background: var(--color-17);
+.login-box button:hover {
+  background: #5a54d1;
 }
 
-.bubble:nth-child(7) {
-  width: 25px;
-  height: 25px;
-  left: 75%;
-  animation-duration: 7s;
-  animation-delay: 2s;
-  background: var(--color-18);
+/* Links */
+.login-box p {
+  margin-top: 1rem;
+  font-size: 0.9rem;
 }
 
-.bubble:nth-child(8) {
-  width: 80px;
-  height: 80px;
-  left: 80%;
-  animation-duration: 6s;
-  animation-delay: 1s;
-  background: var(--color-8);
+.login-box a {
+  color: #6c63ff;
+  text-decoration: none;
 }
 
-.bubble:nth-child(9) {
-  width: 15px;
-  height: 15px;
-  left: 70%;
-  animation-duration: 9s;
-  animation-delay: 0s;
-  background: var(--color-9);
+.login-box a:hover {
+  text-decoration: underline;
 }
 
-.bubble:nth-child(10) {
-  width: 50px;
-  height: 50px;
-  left: 85%;
-  animation-duration: 5s;
-  animation-delay: 3s;
-  background: var(--color-17);
-}
-
-@keyframes rise {
-  0% {
-    bottom: -100px;
-    transform: translateX(0);
+/* Fade In Animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
   }
-  50% {
-    transform: translateX(100px);
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
-  100% {
-    bottom: 1080px;
-    transform: translateX(-200px);
+}
+
+/* Responsive */
+@media (max-width: 500px) {
+  .login-box {
+    padding: 2rem 1rem;
   }
 }
