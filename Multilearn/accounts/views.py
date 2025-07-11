@@ -6,7 +6,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 def landing_page(request):
-    return render(request, 'accounts/index_2.html')
+    return render(request, 'accounts/index_3.html')
 
 def aboutUs_view(request):
     return render(request, 'accounts/aboutUs.html')

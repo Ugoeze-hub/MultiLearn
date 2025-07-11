@@ -1,219 +1,84 @@
-<!-- {% extends "base.html" %} -->
-<!-- {% block content %} -->
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    {% load static %}
-    <title>Sign Up</title>
-    <link rel="stylesheet" href="{% static 'css/login.css' %}" />
-    <link rel="icon" href="{% static 'img/ico.png' %}">
-    <link href="https://unicons.iconscout.com/release/v4.0.0/css/line.css" rel="stylesheet" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-  </head>
+{% extends "base_2.html" %}
 
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+{% block title %}Sign Up - Multilearn{% endblock %}
 
-    html, body {
-      height: 100%;
-      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-      background: url("{% static 'img/2.webp' %}") no-repeat center center/cover;
-    }
-
-    body {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .bubble-background {
-      flex: 1;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding-top: 5rem;
-      height: 100vh;
-      overflow: hidden;
-    }
-
-    nav {
-      position: fixed;
-      top: 0;
-      width: 100%;
-      background: rgba(255, 255, 255, 0.15);
-      -webkit-backdrop-filter: blur(10px);
-      backdrop-filter: blur(10px);
-      z-index: 1000;
-      padding: 1rem 0;
-    }
-
-    .container.nav__container {
-      max-width: 1200px;
-      margin: auto;
-      padding: 0 2rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .nav__menu {
-      list-style: none;
-      display: flex;
-      gap: 2rem;
-    }
-
-    .nav__menu a {
-      color: #fff;
-      font-weight: 600;
-      text-decoration: none;
-      font-size: 0.95rem;
-    }
-
-    .nav__menu a:hover {
-      text-decoration: underline;
-    }
-
-    nav h4 {
-      color: #fff;
-      font-size: 1.5rem;
-    }
-
-    nav button {
-      display: none;
-      background: none;
-      border: none;
-      color: #fff;
-      font-size: 1.2rem;
-    }
-
-    .login-container {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      width: 100%;
-    }
-
-    .login-box {
-      background: rgba(255, 255, 255, 0.15);
-      -webkit-backdrop-filter: blur(20px);
-      backdrop-filter: blur(20px);
-      padding: 2.5rem 2rem;
-      border-radius: 1rem;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
-      width: 90%;
-      max-width: 400px;
-      text-align: center;
-      animation: fadeIn 1s ease-in;
-      border: 1px solid rgba(255, 255, 255, 0.3);
-    }
-
-    .login-box h2 {
-      margin-bottom: 1rem;
-      color: #fff;
-    }
-
-    .login-box form {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-    }
-
-    .login-box form input {
-      padding: 0.75rem;
-      border: 1px solid #ccc;
-      border-radius: 0.5rem;
-      font-size: 1rem;
-    }
-
-    .login-box button {
-      padding: 0.75rem;
-      border: none;
-      background: #6c63ff;
-      color: #fff;
-      border-radius: 0.5rem;
-      cursor: pointer;
-      transition: background 0.3s ease;
-    }
-
-    .login-box button:hover {
-      background: #5a54d1;
-    }
-
-    .login-box p {
-      margin-top: 1rem;
-      font-size: 0.9rem;
-      color: #fff;
-    }
-
-    .login-box a {
-      color: #fff;
-      text-decoration: underline;
-    }
-
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(30px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    @media (max-width: 768px) {
-      .nav__menu {
-        display: none;
-      }
-
-      nav button {
-        display: inline;
-      }
-
-      .login-box {
-        padding: 2rem 1rem;
-      }
-    }
-  </style>
-
-  <body>
-    <!-- Navigation -->
-    <nav>
-      <div class="container nav__container">
-        <a href="/"><h4>Multilearn</h4></a>
-        <button id="open-menu-btn" aria-label="Open navigation menu">
-          <i class="uil uil-bars"></i>
-        </button>
-        <button
-          id="close-menu-btn"
-          aria-label="Close navigation menu"
-          style="display: none"
-        >
-          <i class="uil uil-multiply"></i>
-        </button>
-      </div>
-    </nav>
-
-    <!-- Signup Form -->
-    <div class="bubble-background">
-      <main class="login-container">
-        <section class="login-box">
-          <h2>Sign Up</h2>
-          <form method="post">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit">Create Account</button>
-          </form>
-          <p>Already have an account? <a href="{% url 'accounts:login' %}">Log in</a></p>
-          <p><a href="/">Back</a></p>
-        </section>
-      </main>
+{% block content %}
+<section class="signup-section" style="padding: 120px 0; min-height: calc(100vh - 200px); background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));">
+    <div class="container">
+        <div class="feature-card" style="max-width: 500px; margin: 0 auto; padding: 40px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);">
+            <div class="text-center mb-8">
+                <i class="fas fa-user-plus fa-3x" style="color: var(--primary-color);"></i>
+                <h2 class="text-2xl font-bold mt-4">Sign Up for Multilearn</h2>
+                <p class="text-[var(--text-color)] opacity-80 mt-2">Start your personalized learning journey</p>
+            </div>
+            <form method="post" action="{% url 'accounts:signup' %}">
+                {% csrf_token %}
+                <div class="mb-6">
+                    <label for="{{ form.username.id_for_label }}" class="block text-[var(--text-color)] font-medium mb-2">
+                        <i class="fas fa-user mr-2"></i>Username
+                    </label>
+                    <input type="text" name="{{ form.username.name }}" id="{{ form.username.id_for_label }}"
+                           class="w-full border border-[var(--border-color)] p-3 rounded focus:outline-none focus:border-[var(--primary-color)] bg-[var(--card-bg)]"
+                           placeholder="Choose a username" required>
+                    {% if form.username.errors %}
+                        <p class="text-red-500 text-sm mt-2">{{ form.username.errors.as_text }}</p>
+                    {% endif %}
+                </div>
+                <div class="mb-6">
+                    <label for="{{ form.email.id_for_label }}" class="block text-[var(--text-color)] font-medium mb-2">
+                        <i class="fas fa-envelope mr-2"></i>Email
+                    </label>
+                    <input type="email" name="{{ form.email.name }}" id="{{ form.email.id_for_label }}"
+                           class="w-full border border-[var(--border-color)] p-3 rounded focus:outline-none focus:border-[var(--primary-color)] bg-[var(--card-bg)]"
+                           placeholder="Enter your email" required>
+                    {% if form.email.errors %}
+                        <p class="text-red-500 text-sm mt-2">{{ form.email.errors.as_text }}</p>
+                    {% endif %}
+                </div>
+                <div class="mb-6">
+                    <label for="{{ form.password1.id_for_label }}" class="block text-[var(--text-color)] font-medium mb-2">
+                        <i class="fas fa-lock mr-2"></i>Password
+                    </label>
+                    <input type="password" name="{{ form.password1.name }}" id="{{ form.password1.id_for_label }}"
+                           class="w-full border border-[var(--border-color)] p-3 rounded focus:outline-none focus:border-[var(--primary-color)] bg-[var(--card-bg)]"
+                           placeholder="Create a password" required>
+                    {% if form.password1.errors %}
+                        <p class="text-red-500 text-sm mt-2">{{ form.password1.errors.as_text }}</p>
+                    {% endif %}
+                </div>
+                <div class="mb-6">
+                    <label for="{{ form.password2.id_for_label }}" class="block text-[var(--text-color)] font-medium mb-2">
+                        <i class="fas fa-lock mr-2"></i>Confirm Password
+                    </label>
+                    <input type="password" name="{{ form.password2.name }}" id="{{ form.password2.id_for_label }}"
+                           class="w-full border border-[var(--border-color)] p-3 rounded focus:outline-none focus:border-[var(--primary-color)] bg-[var(--card-bg)]"
+                           placeholder="Confirm your password" required>
+                    {% if form.password2.errors %}
+                        <p class="text-red-500 text-sm mt-2">{{ form.password2.errors.as_text }}</p>
+                    {% endif %}
+                </div>
+                <div class="mb-6">
+                    <label for="{{ form.location.id_for_label }}" class="block text-[var(--text-color)] font-medium mb-2">
+                        <i class="fas fa-map-marker-alt mr-2"></i>Location
+                    </label>
+                    <select name="{{ form.location.name }}" id="{{ form.location.id_for_label }}"
+                            class="w-full border border-[var(--border-color)] p-3 rounded focus:outline-none focus:border-[var(--primary-color)] bg-[var(--card-bg)]">
+                        <option value="urban">Urban</option>
+                        <option value="rural">Rural</option>
+                    </select>
+                    {% if form.location.errors %}
+                        <p class="text-red-500 text-sm mt-2">{{ form.location.errors.as_text }}</p>
+                    {% endif %}
+                </div>
+                {% if form.non_field_errors %}
+                    <p class="text-red-500 text-sm mb-6 text-center">{{ form.non_field_errors.as_text }}</p>
+                {% endif %}
+                <button type="submit" class="cta-button w-full">Create Account</button>
+            </form>
+            <p class="text-center mt-6 text-[var(--text-color)] opacity-80">
+                Already have an account? <a href="{% url 'accounts:login' %}" class="text-[var(--primary-color)] hover:underline">Log in</a>
+            </p>
+        </div>
     </div>
-  </body>
-</html>
-<!-- {% endblock %} -->
+</section>
+{% endblock %}
