@@ -1,96 +1,103 @@
-{% extends "base.html" %}
+{% extends "quizzes/dashboard.html" %}
 {% load static %}
+
 {% block content %}
-  <h2>Search Courses</h2>
-  <form method="get" action="{% url 'search:search' %}">
-    <input type="text" name="q" placeholder="Search a topic..." value="{{ query }}">
-    <button type="submit">Search</button>
-  </form>
+<div class="search-container">
+    <form method="get" action="{% url 'search:search' %}" class="search-bar">
+        {% csrf_token %}
+        <input type="text" name="q" placeholder="Search for courses..." value="{{ query|default:'' }}">
+        <button type="submit"><i class="fas fa-search"></i> Search</button>
+    </form>
 
-  {% if not query and recommendations %}
-    <h3>Recommended Based on Your Previous Searches</h3>
-    <ul>
-      {% for course in recommendations %}
-        <li style="margin-bottom:1.5em;">
-          <h4>{{ course.title }}</h4>
-          {% if course.source == "Youtube" %}
-            <iframe width="400" height="225" src="https://www.youtube.com/embed/{{ course.video_id }}"></iframe>
-          {% else %}
-            <img src="{{ course.thumbnail }}" style="width:200px;" alt="{{ course.title }}">
-            <p><a href="{{ course.url }}" target="_blank">Go to {{ course.source }}</a></p>
-          {% endif %}
-          <p>{{ course.description }}</p>
-          <p>Source: {{ course.source }} — {% if course.is_paid %}<span style="color:red;">Paid</span>{% else %}<span style="color:green;">Free</span>{% endif %}</p>
-        </li>
-      {% endfor %}
-    </ul>
-  {% endif %}
-
-
-  {% if tags %}
-    <div style="margin: 1em 0;">
-      <h4>Related Topics:</h4>
-      <p>
-        {% for tag in tags %}
-          <a href="{% url 'search:search' %}?q={{ tag }}" style="margin-right: 10px; padding: 5px 10px; background: #eee; border-radius: 5px;">#{{ tag }}</a>
-        {% endfor %}
-      </p>
-    </div>
-  {% endif %}
-
-
-  {% if query %}
-    <h3>Results for “{{ query }}”</h3>
-    {% if results %}
-      <ul>
-        {% for course in results %}
-            <li style="margin-bottom:2em;">
-                {% if course.id %}
-                    <h4><a href="{% url 'quizzes:course_detail' course.id %}">{{ course.title }}</a></h4>
-
-                        {% if course.source == "Youtube" %}
-                          <iframe width="400" height="225" src="https://www.youtube.com/embed/{{ course.video_id }}"></iframe>
-                        {% else %}
-                            <a href="{% url 'quizzes:course_detail' course.id %}">View Course
-                            <img src="{{ course.thumbnail }}" alt="{{ course.title }}" style="width:200px;">
-                            </a>
-                            <p><a href="{{ course.url }}" target="_blank">Go to {{ course.source }}</a></p>
-                        {% endif %}
-                {% else %}
-                    <!-- Fallback for course without ID -->
-                    <h4>{{ course.title }}</h4>
-                    {% if course.source == "YouTube" %}
-                        <iframe width="400" height="225" src="https://www.youtube.com/embed/{{ course.video_id }}"></iframe>
+    {% if query %}
+        <h2>Results for “{{ query }}”</h2>
+        <div class="course-grid">
+            {% for course in results %}
+            <div class="course-card">
+                <div class="course-img">
+                    {% if course.thumbnail %}
+                        <img src="{{ course.thumbnail }}" alt="{{ course.title }}" style="width:100%; height:100%; object-fit:cover;">
                     {% else %}
-                        <img src="{{ course.thumbnail }}" alt="{{ course.title }}" style="width:200px;">
-                        <p><a href="{{ course.url }}" target="_blank">Go to {{ course.source }}</a></p>
+                        <i class="fas {{ course.icon_class|default:'fa-laptop-code' }} fa-3x"></i>
                     {% endif %}
-                    {% endif %}
-               
-
-
-            <p>{{ course.description }}</p>
-            <p>
-              Source: {{ course.source }} —
-              {% if course.is_paid %}
-                <span style="color:red;">Paid</span>
-              {% else %}
-                <span style="color:green;">Free</span>
-              {% endif %}
-            </p>
-
-            <form method="post" action="{% url 'quizzes:enroll_course' %}" style="display:inline;">
-              {% csrf_token %}
-              {% for field,value in course.items %}
-                <input type="hidden" name="{{ field }}" value="{{ value }}">
-              {% endfor %}
-              <button type="submit">Enroll</button>
-            </form>
-          </li>
-        {% endfor %}
-      </ul>
+                </div>
+                <div class="course-info">
+                    <h3 class="course-title">
+                        {% if course.id %}
+                            <a href="{% url 'quizzes:course_detail' course.id %}">{{ course.title }}</a>
+                        {% else %}
+                            {{ course.title }}
+                        {% endif %}
+                    </h3>
+                    <p class="course-instructor">By {{ course.source|default:'Unknown' }}</p>
+                    <p>
+                        {% if course.is_paid %}
+                            <span style="color:red;">Paid</span>
+                        {% else %}
+                            <span style="color:green;">Free</span>
+                        {% endif %}
+                    </p>
+                    <form method="post" action="{% url 'quizzes:enroll_course' %}" style="display:inline;">
+                        {% csrf_token %}
+                        <input type="hidden" name="course_id" value="{{ course.id }}">
+                        <button type="submit" class="search-bar button">Enroll</button>
+                    </form>
+                </div>
+            </div>
+            {% empty %}
+            <p>No results found for “{{ query }}.”</p>
+            {% endfor %}
+        </div>
     {% else %}
-      <p>No results found for “{{ query }}.”</p>
+        <h2>Recommended Courses</h2>
+        <div class="course-grid">
+            {% for course in recommendations %}
+            <div class="course-card">
+                <div class="course-img">
+                    {% if course.thumbnail %}
+                        <img src="{{ course.thumbnail }}" alt="{{ course.title }}" style="width:100%; height:100%; object-fit:cover;">
+                    {% else %}
+                        <i class="fas {{ course.icon_class|default:'fa-laptop-code' }} fa-3x"></i>
+                    {% endif %}
+                </div>
+                <div class="course-info">
+                    <h3 class="course-title">
+                        {% if course.id %}
+                            <a href="{% url 'quizzes:course_detail' course.id %}">{{ course.title }}</a>
+                        {% else %}
+                            {{ course.title }}
+                        {% endif %}
+                    </h3>
+                    <p class="course-instructor">By {{ course.source|default:'Unknown' }}</p>
+                    <p>
+                        {% if course.is_paid %}
+                            <span style="color:red;">Paid</span>
+                        {% else %}
+                            <span style="color:green;">Free</span>
+                        {% endif %}
+                    </p>
+                    <form method="post" action="{% url 'quizzes:enroll_course' %}" style="display:inline;">
+                        {% csrf_token %}
+                        <input type="hidden" name="course_id" value="{{ course.id }}">
+                        <button type="submit" class="search-bar button">Enroll</button>
+                    </form>
+                </div>
+            </div>
+            {% empty %}
+            <p>No recommendations available. Try searching for a topic!</p>
+            {% endfor %}
+        </div>
     {% endif %}
-  {% endif %}
+
+    {% if tags %}
+        <div style="margin: 1em 0;">
+            <h4>Related Topics:</h4>
+            <p>
+                {% for tag in tags %}
+                <a href="{% url 'search:search' %}?q={{ tag }}" style="margin-right: 10px; padding: 5px 10px; background: var(--card-bg); border-radius: 5px; color: var(--text-color);">#{{ tag }}</a>
+                {% endfor %}
+            </p>
+        </div>
+    {% endif %}
+</div>
 {% endblock %}

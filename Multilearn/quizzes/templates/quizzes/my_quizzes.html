@@ -1,38 +1,28 @@
-{% extends "base.html" %}
+{% extends "quizzes/dashboard.html" %}
 
 {% block content %}
-<div class="container mx-auto p-4">
-    <h1 class="text-2xl font-bold mb-4">My Quizzes</h1>
+<div class="search-container">
+    <h2>My Quizzes</h2>
     {% if quizzes %}
-        <table class="w-full border-collapse border border-gray-300">
-            <thead>
-                <tr class="bg-gray-100">
-                    <th class="border border-gray-300 p-2 text-left">Topic</th>
-                    <th class="border border-gray-300 p-2 text-left">Difficulty</th>
-                    <th class="border border-gray-300 p-2 text-left">Score</th>
-                    <th class="border border-gray-300 p-2 text-left">Total Questions</th>
-                    <th class="border border-gray-300 p-2 text-left">Date Taken</th>
-                    <th class="border border-gray-300 p-2 text-left">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for quiz in quizzes %}
-                    <tr>
-                        <td class="border border-gray-300 p-2">{{ quiz.topic }}</td>
-                        <td class="border border-gray-300 p-2">{{ quiz.difficulty|title }}</td>
-                        <td class="border border-gray-300 p-2">{{ quiz.score }} / {{ quiz.total_questions }}</td>
-                        <td class="border border-gray-300 p-2">{{ quiz.total_questions }}</td>
-                        <td class="border border-gray-300 p-2">{{ quiz.taken_at|date:"Y-m-d H:i" }}</td>
-                        <td class="border border-gray-300 p-2">
-                            <a href="{% url 'quizzes:quiz_result' quiz.id %}" class="text-blue-500 hover:underline">View Results</a>
-                        </td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+    <div class="course-grid">
+        {% for quiz in quizzes %}
+        <div class="course-card">
+            <div class="course-img">
+                <i class="fas fa-chart-line fa-3x"></i>
+            </div>
+            <div class="course-info">
+                <h3 class="course-title">{{ quiz.topic }}</h3>
+                <p class="course-instructor">Difficulty: {{ quiz.difficulty|title }}</p>
+                <p>Score: {{ quiz.score }} / {{ quiz.total_questions }}</p>
+                <p>Date Taken: {{ quiz.taken_at|date:"Y-m-d H:i" }}</p>
+                <a href="{% url 'quizzes:quiz_result' quiz.id %}" class="search-bar button">View Results</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
     {% else %}
-        <p class="text-gray-600">You haven't taken any quizzes yet.</p>
-        <a href="{% url 'quizzes:create_quiz' %}" class="text-blue-500 hover:underline">Create a new quiz</a>
+    <p>You haven't taken any quizzes yet.</p>
+    <a href="{% url 'quizzes:create_quiz' %}" class="search-bar button">Create a New Quiz</a>
     {% endif %}
 </div>
 {% endblock %}
