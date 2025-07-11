@@ -1,12 +1,729 @@
-{% extends "base.html" %}
-{% block content %}
-  <h2>Welcome, {{ user.username }}</h2>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        {% load static %}
+    <link rel="icon" href="{% static 'img/ico.png' %}">
+    <title>Multilearn Dashboard</title>
+    <style>
+        :root {
+            --primary-color: #4f46e5;
+            --secondary-color: #10b981;
+            --text-color: #1f2937;
+            --bg-color: #ffffff;
+            --card-bg: #f9fafb;
+            --header-bg: rgba(255, 255, 255, 0.95);
+            --border-color: #e5e7eb;
+            --hover-color: #3b82f6;
+        }
 
-  <p>You are currently enrolled in {{ enrolled_count }} course{{ enrolled_count|pluralize }}.</p>
+        .dark-mode {
+            --primary-color: #818cf8;
+            --secondary-color: #34d399;
+            --text-color: #e5e7eb;
+            --bg-color: #111827;
+            --card-bg: #1f2937;
+            --header-bg: rgba(17, 24, 39, 0.95);
+            --border-color: #374151;
+            --hover-color: #60a5fa;
+        }
 
-  <ul>
-    <li><a href="/my-courses">📚 My Courses</a></li>
-    <li><a href="/search-topic/">🔍 Search for a new topic</a></li>
-    <li><a href="/create-quiz/">📝 Take a quiz</a></li>
-  </ul>
-{% endblock %}
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+        }
+
+        .dashboard {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header {
+            background-color: var(--header-bg);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .logo span {
+            color: blue;
+        }
+
+        .nav-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--text-color);
+            cursor: pointer;
+        }
+
+        .main-content {
+            display: flex;
+            flex: 1;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: var(--card-bg);
+            border-right: 1px solid var(--border-color);
+            padding: 1.5rem 0;
+            transition: transform 0.3s ease;
+        }
+
+        .nav-links {
+            list-style: none;
+        }
+
+        .nav-links li {
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-links a {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1.5rem;
+            color: var(--text-color);
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .nav-links a:hover {
+            background-color: var(--border-color);
+            color: var(--primary-color);
+        }
+
+        .nav-links a.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .nav-links a i {
+            margin-right: 0.75rem;
+            font-size: 1.1rem;
+        }
+
+        .content-area {
+            flex: 1;
+            padding: 2rem;
+        }
+
+        .page {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .search-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .search-bar {
+            display: flex;
+            margin-bottom: 2rem;
+        }
+
+        .search-bar input {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 4px 0 0 4px;
+            font-size: 1rem;
+            background-color: var(--card-bg);
+            color: var(--text-color);
+        }
+
+        .search-bar button {
+            padding: 0.75rem 1.5rem;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 0 4px 4px 0;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .search-bar button:hover {
+            background-color: var(--hover-color);
+        }
+
+        .course-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .course-card {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .course-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .course-img {
+            height: 140px;
+            background-color: var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-color);
+        }
+
+        .course-info {
+            padding: 1rem;
+        }
+
+        .course-title {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .course-instructor {
+            font-size: 0.9rem;
+            color: var(--text-color);
+            opacity: 0.7;
+            margin-bottom: 0.75rem;
+        }
+
+        .course-progress {
+            width: 100%;
+            height: 6px;
+            background-color: var(--border-color);
+            border-radius: 3px;
+            margin-bottom: 0.75rem;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background-color: var(--secondary-color);
+            border-radius: 3px;
+        }
+
+        .progress-text {
+            font-size: 0.8rem;
+            color: var(--secondary-color);
+            font-weight: 500;
+        }
+
+        .progress-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .progress-course {
+            display: flex;
+            align-items: center;
+            background-color: var(--card-bg);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .progress-course-img {
+            width: 80px;
+            height: 60px;
+            background-color: var(--border-color);
+            border-radius: 4px;
+            margin-right: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .progress-course-info {
+            flex: 1;
+        }
+
+        .progress-course-title {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .progress-course-details {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logout-container {
+            max-width: 500px;
+            margin: 2rem auto;
+            text-align: center;
+            background-color: var(--card-bg);
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .logout-icon {
+            font-size: 3rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .logout-message {
+            margin-bottom: 2rem;
+        }
+
+        .logout-btn {
+            padding: 0.75rem 2rem;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.2s;
+        }
+
+        .logout-btn:hover {
+            background-color: var(--hover-color);
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            color: var(--text-color);
+            cursor: pointer;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+
+        .user-name {
+            font-weight: 500;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                position: fixed;
+                top: 0;
+                left: 0;
+                height: 100vh;
+                z-index: 90;
+                transform: translateX(-100%);
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .nav-toggle {
+                display: block;
+            }
+
+            .main-content {
+                padding-top: 60px;
+            }
+
+            .content-area {
+                padding: 1rem;
+            }
+
+            .course-grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            }
+        }
+
+        @media (max-width: 480px) {
+            header {
+                padding: 1rem;
+            }
+
+            .course-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .progress-course {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .progress-course-img {
+                margin-bottom: 1rem;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="dashboard">
+        <header>
+            <div class="logo">Multi<span>learn</span></div>
+            <div class="user-profile">
+                <div class="user-avatar">JD</div>
+                <div class="user-name">John Doe</div>
+            </div>
+            <button class="theme-toggle" id="themeToggle">
+                <i class="fas fa-moon"></i>
+            </button>
+            <button class="nav-toggle" id="navToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </header>
+
+        <div class="main-content">
+            <nav class="sidebar" id="sidebar">
+                <ul class="nav-links">
+                    <li>
+                        <a href="#" class="nav-link active" data-page="search">
+                            <i class="fas fa-search"></i>
+                            <span>Search</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="nav-link" data-page="courses">
+                            <i class="fas fa-book"></i>
+                            <span>My Courses</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="nav-link" data-page="progress">
+                            <i class="fas fa-chart-line"></i>
+                            <span>Progress</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="nav-link" data-page="logout">
+                            <i class="fas fa-sign-out-alt"></i>
+                            <span>Logout</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            <div class="content-area">
+                <div class="page active" id="search">
+                    <div class="search-container">
+                        <div class="search-bar">
+                            <input type="text" placeholder="Search for courses...">
+                            <button><i class="fas fa-search"></i> Search</button>
+                        </div>
+                        <h2>Popular Courses</h2>
+                        <div class="course-grid">
+                            <div class="course-card">
+                                <div class="course-img">
+                                    <i class="fas fa-laptop-code fa-3x"></i>
+                                </div>
+                                <div class="course-info">
+                                    <h3 class="course-title">Web Development Bootcamp</h3>
+                                    <p class="course-instructor">By Sarah Johnson</p>
+                                    <div class="course-progress">
+                                        <div class="progress-bar" style="width: 65%"></div>
+                                    </div>
+                                    <p class="progress-text">65% Complete</p>
+                                </div>
+                            </div>
+                            <div class="course-card">
+                                <div class="course-img">
+                                    <i class="fas fa-mobile-alt fa-3x"></i>
+                                </div>
+                                <div class="course-info">
+                                    <h3 class="course-title">Mobile App Development</h3>
+                                    <p class="course-instructor">By Michael Chen</p>
+                                    <div class="course-progress">
+                                        <div class="progress-bar" style="width: 30%"></div>
+                                    </div>
+                                    <p class="progress-text">30% Complete</p>
+                                </div>
+                            </div>
+                            <div class="course-card">
+                                <div class="course-img">
+                                    <i class="fas fa-chart-bar fa-3x"></i>
+                                </div>
+                                <div class="course-info">
+                                    <h3 class="course-title">Data Science Fundamentals</h3>
+                                    <p class="course-instructor">By Emily Rodriguez</p>
+                                    <div class="course-progress">
+                                        <div class="progress-bar" style="width: 80%"></div>
+                                    </div>
+                                    <p class="progress-text">80% Complete</p>
+                                </div>
+                            </div>
+                            <div class="course-card">
+                                <div class="course-img">
+                                    <i class="fas fa-paint-brush fa-3x"></i>
+                                </div>
+                                <div class="course-info">
+                                    <h3 class="course-title">UI/UX Design Principles</h3>
+                                    <p class="course-instructor">By David Wilson</p>
+                                    <div class="course-progress">
+                                        <div class="progress-bar" style="width: 45%"></div>
+                                    </div>
+                                    <p class="progress-text">45% Complete</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="page" id="courses">
+                    <h2>My Courses</h2>
+                    <div class="course-grid">
+                        <div class="course-card">
+                            <div class="course-img">
+                                <i class="fas fa-laptop-code fa-3x"></i>
+                            </div>
+                            <div class="course-info">
+                                <h3 class="course-title">Web Development Bootcamp</h3>
+                                <p class="course-instructor">By Sarah Johnson</p>
+                                <div class="course-progress">
+                                    <div class="progress-bar" style="width: 65%"></div>
+                                </div>
+                                <p class="progress-text">65% Complete</p>
+                            </div>
+                        </div>
+                        <div class="course-card">
+                            <div class="course-img">
+                                <i class="fas fa-mobile-alt fa-3x"></i>
+                            </div>
+                            <div class="course-info">
+                                <h3 class="course-title">Mobile App Development</h3>
+                                <p class="course-instructor">By Michael Chen</p>
+                                <div class="course-progress">
+                                    <div class="progress-bar" style="width: 30%"></div>
+                                </div>
+                                <p class="progress-text">30% Complete</p>
+                            </div>
+                        </div>
+                        <div class="course-card">
+                            <div class="course-img">
+                                <i class="fas fa-chart-bar fa-3x"></i>
+                            </div>
+                            <div class="course-info">
+                                <h3 class="course-title">Data Science Fundamentals</h3>
+                                <p class="course-instructor">By Emily Rodriguez</p>
+                                <div class="course-progress">
+                                    <div class="progress-bar" style="width: 80%"></div>
+                                </div>
+                                <p class="progress-text">80% Complete</p>
+                            </div>
+                        </div>
+                        <div class="course-card">
+                            <div class="course-img">
+                                <i class="fas fa-paint-brush fa-3x"></i>
+                            </div>
+                            <div class="course-info">
+                                <h3 class="course-title">UI/UX Design Principles</h3>
+                                <p class="course-instructor">By David Wilson</p>
+                                <div class="course-progress">
+                                    <div class="progress-bar" style="width: 45%"></div>
+                                </div>
+                                <p class="progress-text">45% Complete</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="page" id="progress">
+                    <h2>My Progress</h2>
+                    <div class="progress-container">
+                        <div class="progress-course">
+                            <div class="progress-course-img">
+                                <i class="fas fa-laptop-code"></i>
+                            </div>
+                            <div class="progress-course-info">
+                                <h3 class="progress-course-title">Web Development Bootcamp</h3>
+                                <div class="progress-course-details">
+                                    <div class="course-progress" style="width: 200px;">
+                                        <div class="progress-bar" style="width: 65%"></div>
+                                    </div>
+                                    <span class="progress-text">65%</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="progress-course">
+                            <div class="progress-course-img">
+                                <i class="fas fa-mobile-alt"></i>
+                            </div>
+                            <div class="progress-course-info">
+                                <h3 class="progress-course-title">Mobile App Development</h3>
+                                <div class="progress-course-details">
+                                    <div class="course-progress" style="width: 200px;">
+                                        <div class="progress-bar" style="width: 30%"></div>
+                                    </div>
+                                    <span class="progress-text">30%</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="progress-course">
+                            <div class="progress-course-img">
+                                <i class="fas fa-chart-bar"></i>
+                            </div>
+                            <div class="progress-course-info">
+                                <h3 class="progress-course-title">Data Science Fundamentals</h3>
+                                <div class="progress-course-details">
+                                    <div class="course-progress" style="width: 200px;">
+                                        <div class="progress-bar" style="width: 80%"></div>
+                                    </div>
+                                    <span class="progress-text">80%</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="progress-course">
+                            <div class="progress-course-img">
+                                <i class="fas fa-paint-brush"></i>
+                            </div>
+                            <div class="progress-course-info">
+                                <h3 class="progress-course-title">UI/UX Design Principles</h3>
+                                <div class="progress-course-details">
+                                    <div class="course-progress" style="width: 200px;">
+                                        <div class="progress-bar" style="width: 45%"></div>
+                                    </div>
+                                    <span class="progress-text">45%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="page" id="logout">
+                    <div class="logout-container">
+                        <div class="logout-icon">
+                            <i class="fas fa-sign-out-alt"></i>
+                        </div>
+                        <h2>Ready to leave?</h2>
+                        <p class="logout-message">Are you sure you want to log out of your account? You can always sign back in later.</p>
+                        <button class="logout-btn">Logout</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Theme toggle
+            const themeToggle = document.getElementById('themeToggle');
+            const body = document.body;
+            
+            themeToggle.addEventListener('click', function() {
+                body.classList.toggle('dark-mode');
+                if (body.classList.contains('dark-mode')) {
+                    themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+                } else {
+                    themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+                }
+            });
+
+            // Navigation toggle for mobile
+            const navToggle = document.getElementById('navToggle');
+            const sidebar = document.getElementById('sidebar');
+            
+            navToggle.addEventListener('click', function() {
+                sidebar.classList.toggle('open');
+            });
+
+            // Page navigation
+            const navLinks = document.querySelectorAll('.nav-link');
+            const pages = document.querySelectorAll('.page');
+            
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Remove active class from all links and pages
+                    navLinks.forEach(l => l.classList.remove('active'));
+                    pages.forEach(page => page.classList.remove('active'));
+                    
+                    // Add active class to clicked link
+                    this.classList.add('active');
+                    
+                    // Show corresponding page
+                    const pageId = this.getAttribute('data-page');
+                    document.getElementById(pageId).classList.add('active');
+                    
+                    // Close sidebar on mobile after selection
+                    if (window.innerWidth <= 768) {
+                        sidebar.classList.remove('open');
+                    }
+                });
+            });
+
+            // Search functionality
+            const searchInput = document.querySelector('.search-bar input');
+            const searchButton = document.querySelector('.search-bar button');
+            
+            searchButton.addEventListener('click', function() {
+                const searchTerm = searchInput.value.trim();
+                if (searchTerm) {
+                    alert(`Searching for: ${searchTerm}`);
+                    // In a real app, you would make an API call here
+                }
+            });
+            
+            searchInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    const searchTerm = searchInput.value.trim();
+                    if (searchTerm) {
+                        alert(`Searching for: ${searchTerm}`);
+                        // In a real app, you would make an API call here
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
