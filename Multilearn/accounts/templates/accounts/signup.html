@@ -1,84 +1,74 @@
 {% extends "base_2.html" %}
 
-{% block title %}Sign Up - Multilearn{% endblock %}
+{% block title %}Log In - Multilearn{% endblock %}
 
 {% block content %}
-<section class="signup-section" style="padding: 120px 0; min-height: calc(100vh - 200px); background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));">
-    <div class="container">
-        <div class="feature-card" style="max-width: 500px; margin: 0 auto; padding: 40px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);">
-            <div class="text-center mb-8">
-                <i class="fas fa-user-plus fa-3x" style="color: var(--primary-color);"></i>
-                <h2 class="text-2xl font-bold mt-4">Sign Up for Multilearn</h2>
-                <p class="text-[var(--text-color)] opacity-80 mt-2">Start your personalized learning journey</p>
-            </div>
-            <form method="post" action="{% url 'accounts:signup' %}">
-                {% csrf_token %}
-                <div class="mb-6">
-                    <label for="{{ form.username.id_for_label }}" class="block text-[var(--text-color)] font-medium mb-2">
-                        <i class="fas fa-user mr-2"></i>Username
-                    </label>
-                    <input type="text" name="{{ form.username.name }}" id="{{ form.username.id_for_label }}"
-                           class="w-full border border-[var(--border-color)] p-3 rounded focus:outline-none focus:border-[var(--primary-color)] bg-[var(--card-bg)]"
-                           placeholder="Choose a username" required>
-                    {% if form.username.errors %}
-                        <p class="text-red-500 text-sm mt-2">{{ form.username.errors.as_text }}</p>
-                    {% endif %}
-                </div>
-                <div class="mb-6">
-                    <label for="{{ form.email.id_for_label }}" class="block text-[var(--text-color)] font-medium mb-2">
-                        <i class="fas fa-envelope mr-2"></i>Email
-                    </label>
-                    <input type="email" name="{{ form.email.name }}" id="{{ form.email.id_for_label }}"
-                           class="w-full border border-[var(--border-color)] p-3 rounded focus:outline-none focus:border-[var(--primary-color)] bg-[var(--card-bg)]"
-                           placeholder="Enter your email" required>
-                    {% if form.email.errors %}
-                        <p class="text-red-500 text-sm mt-2">{{ form.email.errors.as_text }}</p>
-                    {% endif %}
-                </div>
-                <div class="mb-6">
-                    <label for="{{ form.password1.id_for_label }}" class="block text-[var(--text-color)] font-medium mb-2">
-                        <i class="fas fa-lock mr-2"></i>Password
-                    </label>
-                    <input type="password" name="{{ form.password1.name }}" id="{{ form.password1.id_for_label }}"
-                           class="w-full border border-[var(--border-color)] p-3 rounded focus:outline-none focus:border-[var(--primary-color)] bg-[var(--card-bg)]"
-                           placeholder="Create a password" required>
-                    {% if form.password1.errors %}
-                        <p class="text-red-500 text-sm mt-2">{{ form.password1.errors.as_text }}</p>
-                    {% endif %}
-                </div>
-                <div class="mb-6">
-                    <label for="{{ form.password2.id_for_label }}" class="block text-[var(--text-color)] font-medium mb-2">
-                        <i class="fas fa-lock mr-2"></i>Confirm Password
-                    </label>
-                    <input type="password" name="{{ form.password2.name }}" id="{{ form.password2.id_for_label }}"
-                           class="w-full border border-[var(--border-color)] p-3 rounded focus:outline-none focus:border-[var(--primary-color)] bg-[var(--card-bg)]"
-                           placeholder="Confirm your password" required>
-                    {% if form.password2.errors %}
-                        <p class="text-red-500 text-sm mt-2">{{ form.password2.errors.as_text }}</p>
-                    {% endif %}
-                </div>
-                <div class="mb-6">
-                    <label for="{{ form.location.id_for_label }}" class="block text-[var(--text-color)] font-medium mb-2">
-                        <i class="fas fa-map-marker-alt mr-2"></i>Location
-                    </label>
-                    <select name="{{ form.location.name }}" id="{{ form.location.id_for_label }}"
-                            class="w-full border border-[var(--border-color)] p-3 rounded focus:outline-none focus:border-[var(--primary-color)] bg-[var(--card-bg)]">
-                        <option value="urban">Urban</option>
-                        <option value="rural">Rural</option>
-                    </select>
-                    {% if form.location.errors %}
-                        <p class="text-red-500 text-sm mt-2">{{ form.location.errors.as_text }}</p>
-                    {% endif %}
-                </div>
-                {% if form.non_field_errors %}
-                    <p class="text-red-500 text-sm mb-6 text-center">{{ form.non_field_errors.as_text }}</p>
-                {% endif %}
-                <button type="submit" class="cta-button w-full">Create Account</button>
-            </form>
-            <p class="text-center mt-6 text-[var(--text-color)] opacity-80">
-                Already have an account? <a href="{% url 'accounts:login' %}" class="text-[var(--primary-color)] hover:underline">Log in</a>
-            </p>
-        </div>
+<section class="login-section" style="padding: 140px 0; min-height: calc(100vh - 300px); display: flex; align-items: center; justify-content: center;">
+  <div class="feature-card" style="
+      max-width: 500px;
+      width: 100%;
+      padding: 40px;
+      border-radius: 16px;
+      backdrop-filter: blur(20px);
+      background-color: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+      transition: all 0.3s ease;
+  ">
+    <div class="text-center mb-8">
+      <i class="fas fa-sign-in-alt fa-3x" style="color: var(--primary-color);"></i>
+      <h2 style="font-size: 1.75rem; font-weight: 700; margin-top: 1rem; color: var(--text-color);">Log In to Multilearn</h2>
+      <p style="color: var(--text-color); opacity: 0.8; margin-top: 0.5rem;">Access your personalized learning journey</p>
     </div>
+
+    <form method="post" action="{% url 'accounts:login' %}">
+      {% csrf_token %}
+      
+      <div style="margin-bottom: 1.5rem;">
+        <label for="{{ form.username.id_for_label }}" style="display: block; font-weight: 500; color: var(--text-color); margin-bottom: 0.5rem;">
+          <i class="fas fa-user"></i> Username
+        </label>
+        <input type="text" name="{{ form.username.name }}" id="{{ form.username.id_for_label }}"
+               class="w-full" placeholder="Enter your username" required
+               value="{{ form.username.value|default_if_none:'' }}"
+               style="width: 100%; padding: 14px 16px; border-radius: 8px; border: 1px solid var(--border-color); background-color: rgba(255,255,255,0.1); color: var(--text-color);">
+        {% if form.username.errors %}
+        <p class="error-message" style="color: var(--hover-color); font-size: 14px;">{{ form.username.errors.0 }}</p>
+        {% endif %}
+      </div>
+
+      <div style="margin-bottom: 1.5rem;">
+        <label for="{{ form.password.id_for_label }}" style="display: block; font-weight: 500; color: var(--text-color); margin-bottom: 0.5rem;">
+          <i class="fas fa-lock"></i> Password
+        </label>
+        <input type="password" name="{{ form.password.name }}" id="{{ form.password.id_for_label }}"
+               class="w-full" placeholder="Enter your password" required
+               style="width: 100%; padding: 14px 16px; border-radius: 8px; border: 1px solid var(--border-color); background-color: rgba(255,255,255,0.1); color: var(--text-color);">
+        {% if form.password.errors %}
+        <p class="error-message" style="color: var(--hover-color); font-size: 14px;">{{ form.password.errors.0 }}</p>
+        {% endif %}
+      </div>
+
+      {% if form.non_field_errors %}
+      <p class="error-message text-center" style="color: var(--hover-color); font-size: 14px; margin-bottom: 1.5rem;">
+        {{ form.non_field_errors.0 }}
+      </p>
+      {% endif %}
+
+      <button type="submit" class="cta-button w-full" style="width: 100%; padding: 14px 16px; border-radius: 8px;">
+        Log In
+      </button>
+    </form>
+
+    <div class="text-center mt-6" style="margin-top: 1.5rem;">
+      <p style="color: var(--text-color); opacity: 0.8;">
+        Don't have an account?
+        <a href="{% url 'accounts:signup' %}" style="color: var(--primary-color); text-decoration: underline;">Sign up</a>
+      </p>
+      <p style="margin-top: 0.5rem;">
+        <a href="" style="color: var(--primary-color); text-decoration: underline;">Forgot password?</a>
+      </p>
+    </div>
+  </div>
 </section>
 {% endblock %}
