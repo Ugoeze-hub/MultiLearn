@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+  <h2>Welcome, {{ user.username }}</h2>
+
+  <p>You are currently enrolled in {{ enrolled_count }} course{{ enrolled_count|pluralize }}.</p>
+
+  <ul>
+    <li><a href="/my-courses">📚 My Courses</a></li>
+    <li><a href="/search-topic/">🔍 Search for a new topic</a></li>
+    <li><a href="/create-quiz/">📝 Take a quiz</a></li>
+  </ul>
+{% endblock %}

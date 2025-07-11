@@ -1,12 +1,632 @@
-{% extends "base.html" %}
-{% block content %}
-  <h2>Welcome, {{ user.username }}</h2>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <p>You are currently enrolled in {{ enrolled_count }} course{{ enrolled_count|pluralize }}.</p>
+    <link rel="icon" type="image/webp" href="../static/img/learnquest.png" />
+    <link rel="icon" type="image/jpeg" href="../static/img/learnquest.png" />
+    <link
+        rel="stylesheet"
+        href="https://unicons.iconscout.com/release/v4.0.8/css/line.css"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet"
+    />
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
+    />
+    <link rel="stylesheet" href="../static/css/user_dashboard.css">
 
-  <ul>
-    <li><a href="/my-courses">📚 My Courses</a></li>
-    <li><a href="/search-topic/">🔍 Search for a new topic</a></li>
-    <li><a href="/create-quizzes/">📝 Take a quiz</a></li>
-  </ul>
-{% endblock %}
+    <title> {{ user.username }} Learning Dashboard</title>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js";
+        import { getAuth } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js";
+        import { getDatabase } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-database.js";
+    </script>
+
+</head>
+<style>
+    :root{
+  --base-clr: #081b29;
+  --line-clr: #42434a;
+  --hover-clr: #222533;
+  --text-clr: #e6e6ef;
+  --accent-clr: #5e63ff;
+  --secondary-text-clr: #b0b3c1;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+html {
+  font-family:system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  line-height: 1.5rem;
+}
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  background-color: #f4f7fc;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  min-height: 100vh;
+  min-height: 100dvh;
+  background-color: #081b29;
+  color: var(--text-clr);
+}
+
+.sidebar{
+  box-sizing: border-box;
+  height: 100vh;
+  width: 2rem;
+  padding: 1px 7rem;
+  display: flex;
+  background-color: var(--base-clr);
+  border-right: 1px solid var(--line-clr);
+  color: #fff;
+  flex-direction: column;
+  align-items: center;
+  height: 100vh;
+  box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+}
+
+
+.dashboard-container {
+    display: flex;
+    width: 100%;
+}
+
+#sidebar.close{
+  padding: 5px;
+  width: 60px;
+}
+#sidebar ul{
+  list-style: none;
+}
+#sidebar > ul > li:first-child{
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 16px;
+  .logo{
+    font-weight: 600;
+  }
+}
+#sidebar ul li.active a{
+  color: var(--accent-clr);
+
+  svg{
+    fill: var(--accent-clr);
+  }
+}
+
+#sidebar a, #sidebar .dropdown-btn, #sidebar .logo{
+  border-radius: .5em;
+  padding: .85em;
+  text-decoration: none;
+  color: var(--text-clr);
+  display: flex;
+  align-items: center;
+  gap: 1em;
+}
+.dropdown-btn{
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  font: inherit;
+  cursor: pointer;
+}
+#sidebar svg{
+  flex-shrink: 0;
+  fill: var(--text-clr);
+}
+#sidebar a span, #sidebar .dropdown-btn span{
+  flex-grow: 1;
+}
+#sidebar a:hover, #sidebar .dropdown-btn:hover{
+  background-color: var(--hover-clr);
+}
+#sidebar .sub-menu{
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: 300ms ease-in-out;
+
+  > div{
+    overflow: hidden;
+  }
+}
+#sidebar .sub-menu.show{
+  grid-template-rows: 1fr;
+}
+.dropdown-btn svg{
+  transition: 200ms ease;
+}
+.rotate svg:last-child{
+  rotate: 180deg;
+}
+#sidebar .sub-menu a{
+  padding-left: 2em;
+}
+#toggle-btn{
+  margin-left: auto;
+  padding: 1em;
+  border: none;
+  border-radius: .5em;
+  background: none;
+  cursor: pointer;
+
+  svg{
+    transition: rotate 150ms ease;
+  }
+}
+#toggle-btn:hover{
+  background-color: var(--hover-clr);
+}
+
+main{
+  padding: min(30px, 7%);
+}
+main p{
+  color: var(--secondary-text-clr);
+  margin-top: 5px;
+  margin-bottom: 15px;
+}
+.container{
+  border: 1px solid var(--line-clr);
+  border-radius: 1em;
+  margin-bottom: 20px;
+  padding: min(3em, 15%);
+
+  h2, p { margin-top: 1em }
+}
+
+@media(max-width: 800px){
+  body{
+    grid-template-columns: 1fr;
+  }
+  main{
+    padding: 2em 1em 60px 1em;
+  }
+  .container{
+    border: none;
+    padding: 0;
+  }
+  #sidebar{
+    height: 60px;
+    width: 100%;
+    border-right: none;
+    border-top: 1px solid var(--line-clr);
+    padding: 0;
+    position: fixed;
+    top: unset;
+    bottom: 0;
+
+    > ul{
+      padding: 0;
+      display: grid;
+      grid-auto-columns: 60px;
+      grid-auto-flow: column;
+      align-items: center;
+      overflow-x: scroll;
+    }
+    ul li{
+      height: 100%;
+    }
+    ul a, ul .dropdown-btn{
+      width: 60px;
+      height: 60px;
+      padding: 0;
+      border-radius: 0;
+      justify-content: center;
+    }
+
+    ul li span, ul li:first-child, .dropdown-btn svg:last-child{
+      display: none;
+    }
+
+    ul li .sub-menu.show{
+      position: fixed;
+      bottom: 60px;
+      left: 0;
+      box-sizing: border-box;
+      height: 60px;
+      width: 100%;
+      background-color: var(--hover-clr);
+      border-top: 1px solid var(--line-clr);
+      display: flex;
+      justify-content: center;
+
+      > div{
+        overflow-x: auto;
+      }
+      li{
+        display: inline-flex;
+      }
+      a{
+        box-sizing: border-box;
+        padding: 1em;
+        width: auto;
+        justify-content: center;
+      }
+    }
+  }
+}
+
+.user-info {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.profile-pic {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    margin-bottom: 10px;
+}
+
+.nav-links ul {
+    list-style: none;
+    width: 100%;
+    padding: 0;
+}
+
+.nav-links li {
+    margin: 15px 0;
+}
+
+.nav-links a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 18px;
+    text-align: center;
+    display: block;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.nav-links a:hover {
+    background-color: #1d2635;
+}
+
+.main-content {
+    flex-grow: 1;
+    padding: 30px;
+    background-color: #fff;
+}
+  
+h1 {
+  font-size: 28px;
+  margin-bottom: 30px;
+  color: #2f3b52;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+h2 {
+  font-size: 22px;
+  margin-bottom: 20px;
+  color: #fff;
+}
+
+
+
+.course-search {
+    margin-bottom: 30px;
+}
+
+.search-input {
+    padding: 10px;
+    width: 70%;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-right: 10px;
+}
+
+.search-button {
+    padding: 10px 20px;
+    background-color: #2f3b52;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.search-button:hover {
+    background-color: #1d2635;
+}
+
+.progress-tracker {
+    background-color: #e2e8f0;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    margin-bottom: 30px;
+}
+.progress-tracker h9 {
+  font-size: 22px;
+  margin-bottom: 20px;
+  color: black;
+  font-weight: 1000;
+}
+
+.progress-bar {
+    background-color: #ccc;
+    border-radius: 5px;
+    height: 20px;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.progress {
+    background-color: #4CAF50;
+    height: 100%;
+    border-radius: 5px;
+}
+
+.quizzes {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.quiz-card {
+    background-color: #f8fafc;
+    padding: 20px;
+    border-radius: 8px;
+    width: 45%;
+    text-align: center;
+}
+
+.quiz-button {
+    padding: 10px 20px;
+    background-color: #2f3b52;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.quiz-button:hover {
+    background-color: #1d2635;
+}
+
+
+.input{
+    display: flex;
+    justify-content: center;
+}
+
+
+.card-img{
+    display: flex;
+    gap: 3px;
+}
+.card{
+    box-shadow: 2px 2px 13px rgb(19, 17, 17);
+    width: fit-content;
+    border-radius: 10px;
+}
+.card img{
+    width: 400px;
+    border-radius: 10px;
+}
+.card-img img{
+    width: 20px;
+}
+.card-text{
+    padding: 10px;
+
+}
+.card-container{
+    display: grid;
+    gap: 20px;
+    justify-content: space-between;
+    grid-template-columns: auto auto auto;
+}
+.card-text button{
+    width: 100%;
+    padding: 15px;
+    border-radius: 10px;
+    border: none;
+    background: rgb(13, 145, 55);
+    color: white;
+    margin-top: 30px;
+    font-weight: bold;
+}
+.search-result-button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #469028;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+    text-align: center;
+    font-weight: bold;
+    margin: 10px 0;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+  
+  .search-result-button:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+  }
+  
+  .search-result-button:active {
+    background-color: #003f7f;
+    transform: scale(1);
+  }
+
+
+ 
+
+/* Video card styling */
+.video-card {
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  transition: transform 0.2s;
+  display: flex;
+  flex-direction: column;
+  height: 280px; /* Fixed height for consistency */
+}
+
+.video-card:hover {
+  transform: translateY(-5px);
+}
+
+.video-thumbnail {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+}
+
+.video-info {
+  padding: 12px;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.video-title {
+  font-weight: 600;
+  margin-bottom: 8px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.video-channel {
+  color: #0c0303;
+  font-size: 14px;
+  margin-top: auto;
+}
+
+.video-duration {
+  background: rgba(0,0,0,0.7);
+  color: white;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 12px;
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+}
+
+/* (Your existing CSS styles) */
+.search-results-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Responsive grid */
+  gap: 20px;
+  max-height: 600px;
+  overflow-y: auto;
+  padding: 20px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  margin-top: 15px;
+}
+
+.card {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.card img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+}
+
+.card-text {
+  padding: 15px;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.search-results-container::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.search-results-container::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.search-results-container::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+.search-results-container::-webkit-scrollbar-thumb:hover {
+background: #555;
+}
+</style>
+<body>
+  
+            
+    <aside class="sidebar">
+        <div class="user-info">
+            <img src="../static/img/learnquest.png" 
+            alt="User Profile" 
+            class="profile-pic">
+            <h2>Welcome, {{ user.username }}!</h2>
+        </div>
+        <nav class="nav-links">
+            <ul>
+                <li><a href="/user">Search Courses 🤗</a></li>
+                <li><a href="/progress">Progress 💪</a></li>
+                <li><a href="/quiz">Test Quiz! 📚</a></li>
+                <li><a href="/logout">Logout 👋👋</a></li>
+            </ul>
+        </nav>
+    </aside>
+
+        <!-- Main content -->
+        <main class="main-content">
+            <h1 class="quiz-title">
+                <span class="title-text">
+                    {{ user.username }}'s Learning Dashboard
+                </span>
+            </h1>
+
+            <!-- Search for Courses -->
+            <section class="course-search">
+                <h2>Search for Courses</h2>
+                <div class="input">
+                  <input type="text" placeholder="Search for a topic..." id="course-search" class="search-input" />
+                  <button class="search-button" onclick="handleCourseSearch()">Search</button>
+                </div>
+                <div id="search-results-container" class="search-results-container"></div>
+              </section>
+              
+
+
+            <!-- Progress Tracker -->
+           
+
+
+
+           
+        </main>
+    </div>
+
+
+
+<script src="../static/java/courseSearch.js"></script>
+
+</body>
+</html>

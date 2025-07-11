@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mx-auto p-4">
+    <h1 class="text-2xl font-bold mb-4">Recommended Courses</h1>
+    {% if weak_topics %}
+        <p class="text-gray-600 mb-4">Based on your quiz performance, we recommend courses to strengthen these topics: {{ weak_topics|join:", " }}</p>
+    {% else %}
+        <p class="text-gray-600 mb-4">Explore these popular courses to continue your learning journey!</p>
+    {% endif %}
+    
+    {% if courses %}
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {% for course in courses %}
+                <div class="border border-gray-300 p-4 rounded">
+                    <h2 class="text-xl font-semibold">{{ course.title }}</h2>
+                    <p class="text-gray-600">Source: {{ course.source }}</p>
+                    {% if course.thumbnail %}
+                        <img src="{{ course.thumbnail }}" alt="{{ course.title }}" class="w-full h-32 object-cover mb-2">
+                    {% endif %}
+                    <p class="text-gray-500 truncate">{{ course.description }}</p>
+                    <a href="{% url 'quizzes:course_detail' course.id %}" class="text-blue-500 hover:underline">View Course</a>
+                    {% if not course.is_paid %}
+                        <span class="text-green-500">Free</span>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="text-gray-600">No recommendations available yet. Take a quiz to get personalized suggestions!</p>
+    {% endif %}
+    <p class="mt-4">
+        <a href="{% url 'quizzes:create_quiz' %}" class="text-blue-500 hover:underline">Take a Quiz</a> |
+        <a href="{% url 'quizzes:my_courses' %}" class="text-blue-500 hover:underline">My Courses</a>
+    </p>
+</div>
+{% endblock %}

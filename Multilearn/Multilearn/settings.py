@@ -31,7 +31,9 @@ SECRET_KEY = 'django-insecure-3s@&#w6490q(iepsnj*-u(xwbbhddl2)be8s7b98c0exoqrzs*
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
+LOGIN_URL = '/login/' 
+LOGIN_REDIRECT_URL = 'quizzes:dashboard' 
+LOGOUT_REDIRECT_URL = 'home'
 
 # Application definition
 

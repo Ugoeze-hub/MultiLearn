@@ -14,6 +14,7 @@ class Course(models.Model):
     video_id = models.CharField(max_length=50, blank=True, null=True)
     is_paid = models.BooleanField(default=False)
     tags = models.ManyToManyField(Tag, blank=True)
+    course_enrolled_users = models.ManyToManyField(User, through='Enrollment', related_name='enrolled_courses')
 
     def __str__(self):
         return f'{self.title} ({self.source})'

@@ -9,9 +9,16 @@
       Welcome, {{ user.username }} |
       <a href="{% url 'quizzes:dashboard' %}">Dashboard</a> |
       <a href="{% url 'quizzes:my_courses' %}">My Courses</a> |
-      <a href="{% url 'accounts:logout' %}">Logout</a>
+      <a href="{% url 'quizzes:my_quizzes' %}" class="text-blue-500 hover:underline">My Quizzes</a> |
+      <a href="{% url 'quizzes:recommendations' %}" class="text-blue-500 hover:underline">My Recommendations</a> |
+      {% if user.is_authenticated %}
+        <a href="{% url 'accounts:logout' %}" class="text-blue-500 hover:underline">Log Out</a>
+      {% else %}
+          <a href="{% url 'accounts:login' %}" class="text-blue-500 hover:underline">Log In</a>
+      {% endif %}
     </p>
   {% endif %}
+  
   {% block content %}{% endblock %}
 </body>
 </html>

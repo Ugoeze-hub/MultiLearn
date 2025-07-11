@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.forms.models import model_to_dict
 from django.utils import timezone
+from django.db.models import Q, Count
 from .models import *
 import logging
 from .forms import *
@@ -68,9 +69,10 @@ def create_quiz_view(request):
     if request.method == 'POST':
         topic = request.POST.get('topic')
         difficulty = request.POST.get('difficulty', 'easy')
-        num_questions = request.POST.get('num_questions')
+        num_questions = request.POST.get('num_questions', 5)
 
         questions_data = generate_quiz(topic, difficulty, num_questions)
+        logger.info(f"Generated questions: {questions_data}")
 
         if questions_data:
             quiz = Quiz.objects.create(
@@ -103,15 +105,43 @@ def create_quiz_view(request):
     return render(request, 'quizzes/create_quiz.html')
 
 
+@login_required
+def recommend_courses(request):
+    # Identify weak topics from incorrect answers
+    weak_topics = UserAnswer.objects.filter(
+        user=request.user, option__is_correct=False
+    ).values('quiz__topic').distinct()
+
+    # Get courses matching weak topics (via tags)
+    recommended_courses = Course.objects.filter(
+        tags__name__in=[t['quiz__topic'] for t in weak_topics], is_paid=False
+    ).distinct()[:5]
+
+    # Fallback: Recommend popular courses if no weak topics
+    if not recommended_courses:
+        recommended_courses = Course.objects.filter(
+            course_enrolled_users__isnull=False
+        ).annotate(
+            enrollment_count=Count('course_enrolled_users')
+        ).order_by('-enrollment_count').distinct()[:5]
+
+    return render(request, 'quizzes/quiz_recommendation.html', {
+        'courses': recommended_courses,
+        'weak_topics': [t['quiz__topic'] for t in weak_topics]
+    })
+
 
 @login_required
 def take_quiz_view(request, quiz_id):
     quiz = Quiz.objects.get(id=quiz_id, user=request.user)
-    questions = quiz.questions.all()
+    questions = quiz.questions.prefetch_related('options').all()
+
+    form = QuizForm(request.POST, questions=questions)
 
     if request.method == 'POST':
-        form = QuizForm(request.POST, questions=questions)
+        
         if form.is_valid():
+            logger.info(f"Form cleaned data: {form.cleaned_data}")
             score = 0
 
             UserAnswer.objects.filter(quiz=quiz, user=request.user).delete()
@@ -122,18 +152,19 @@ def take_quiz_view(request, quiz_id):
                 try:
 
                     selected_opt = question.options.get(label=user_answer)
-
+                    logger.info(f"Question {i+1}: Selected {selected_opt.label} ({selected_opt.text}), Is Correct: {selected_opt.is_correct}")
                     UserAnswer.objects.create(
                         user=request.user,
                             quiz=quiz,
                             question=question,
                             option=selected_opt
                     )
-
+                    
                     if selected_opt.is_correct:
                         score += 1
 
                 except Option.DoesNotExist:
+                    logger.warning(f"Invalid option {user_answer} for question {i+1}")
                     continue
 
             quiz.score = score
@@ -143,11 +174,16 @@ def take_quiz_view(request, quiz_id):
         else:
             form = QuizForm(questions=questions)
 
-        return render(request, 'quizzes/take_quiz.html', {
-        'quiz': quiz,
-        'form': form
+    return render(request, 'quizzes/take_quiz.html', {
+    'quiz': quiz,
+    'form': form
     })
         
+@login_required
+def my_quizzes_view(request):
+    quizzes = Quiz.objects.filter(user=request.user).order_by('-taken_at')
+    return render(request, 'quizzes/my_quizzes.html', {'quizzes': quizzes})
+
 
 @login_required
 def quiz_result_view(request, quiz_id):

@@ -1,3 +1,6 @@
 <h2>Results for {{ quiz.topic }}</h2>
 <p>Your score: {{ quiz.score }}/{{ quiz.questions.count }}</p>
-<a href="{% url 'quizzes:create_quiz' %}">Try Another</a>
+<p><a href="{% url 'quizzes:create_quiz' %}">Try Another</a> </p>
+<p><a href="{% url 'quizzes:dashboard' %}">Back</a> </p>
+<a href="{% url 'quizzes:my_quizzes' %}">Other Results</a> |
+

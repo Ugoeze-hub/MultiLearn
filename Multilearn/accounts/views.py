@@ -2,7 +2,9 @@ from django.shortcuts import render, redirect
 from .forms import SignUpForm, LoginForm
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required 
+import logging
 
+logger = logging.getLogger(__name__)
 def landing_page(request):
     return render(request, 'accounts/index_2.html')
 
@@ -40,17 +42,9 @@ def login_view(request):
     else:
         form = LoginForm()
     return render(request, 'accounts/login.html', {'form':form})
-        
-
-
-
-
-
-
-
-
 
 @login_required
 def logout_view(request):
+    logger.info(f"User {request.user.username} logged out")
     logout(request)
-    return redirect('login')
+    return redirect('/')
