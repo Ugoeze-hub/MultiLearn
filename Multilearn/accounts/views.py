@@ -6,6 +6,12 @@ from django.contrib.auth.decorators import login_required
 def landing_page(request):
     return render(request, 'accounts/index_2.html')
 
+def aboutUs_view(request):
+    return render(request, 'accounts/aboutUs.html')
+
+def team_view(request):
+    return render(request, 'accounts/team.html')
+
 
 def signup_view(request):
     if request.method == 'POST':

@@ -1,11 +1,43 @@
 <!-- {% extends "base.html" %} -->
 <!-- {% block content %} -->
-<h2>Log In</h2>
-<form method="post">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <button type="submit">Log In</button>
-</form>
-<p>Don't have an account? <a href="{% url 'accounts:signup' %}">Sign up</a></p>
-<p> <a href="/">Back</a></p>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    {% load static %}
+    <title>Login</title>
+    <link rel="stylesheet" href="{% static 'css/login.css' %}" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  </head>
+  <body>
+    <div class="bubbles">
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+    </div>
+    <div class="bubble-background">
+      <main class="login-container">
+        <section class="login-box">
+          <h2>Log In</h2>
+          <form method="post">
+            {% csrf_token %} {{ form.as_p }}
+            <button type="submit">Log In</button>
+          </form>
+
+          <p>
+            Don't have an account?
+            <a href="{% url 'accounts:signup' %}">Sign up</a>
+          </p>
+          <p><a href="/">Back</a></p>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>
 <!-- {% endblock %} -->
