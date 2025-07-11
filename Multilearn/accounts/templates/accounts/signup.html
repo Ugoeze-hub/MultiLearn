@@ -1,10 +1,10 @@
 {% extends "base_2.html" %}
 
-{% block title %}Log In - Multilearn{% endblock %}
+{% block title %}Sign Up - Multilearn{% endblock %}
 
 {% block content %}
-<section class="login-section" style="padding: 140px 0; min-height: calc(100vh - 300px); display: flex; align-items: center; justify-content: center;">
-  <div class="feature-card" style="
+<section style="padding: 140px 0; min-height: calc(100vh - 300px); display: flex; align-items: center; justify-content: center;">
+  <div style="
       max-width: 500px;
       width: 100%;
       padding: 40px;
@@ -16,59 +16,85 @@
       transition: all 0.3s ease;
   ">
     <div class="text-center mb-8">
-      <i class="fas fa-sign-in-alt fa-3x" style="color: var(--primary-color);"></i>
-      <h2 style="font-size: 1.75rem; font-weight: 700; margin-top: 1rem; color: var(--text-color);">Log In to Multilearn</h2>
-      <p style="color: var(--text-color); opacity: 0.8; margin-top: 0.5rem;">Access your personalized learning journey</p>
+      <i class="fas fa-user-plus fa-3x" style="color: var(--primary-color);"></i>
+      <h2 style="font-size: 1.75rem; font-weight: 700; margin-top: 1rem; color: var(--text-color);">Sign Up for Multilearn</h2>
+      <p style="color: var(--text-color); opacity: 0.8; margin-top: 0.5rem;">Start your personalized learning journey</p>
     </div>
 
-    <form method="post" action="{% url 'accounts:login' %}">
+    <form method="post" action="{% url 'accounts:signup' %}">
       {% csrf_token %}
-      
+
+      <!-- Username -->
       <div style="margin-bottom: 1.5rem;">
-        <label for="{{ form.username.id_for_label }}" style="display: block; font-weight: 500; color: var(--text-color); margin-bottom: 0.5rem;">
-          <i class="fas fa-user"></i> Username
+        <label for="{{ form.username.id_for_label }}" style="display: block; font-weight: 500; margin-bottom: 0.5rem; color: var(--text-color);">
+          <i class="fas fa-user mr-2"></i> Username
         </label>
         <input type="text" name="{{ form.username.name }}" id="{{ form.username.id_for_label }}"
-               class="w-full" placeholder="Enter your username" required
+               placeholder="Enter a username" required
                value="{{ form.username.value|default_if_none:'' }}"
-               style="width: 100%; padding: 14px 16px; border-radius: 8px; border: 1px solid var(--border-color); background-color: rgba(255,255,255,0.1); color: var(--text-color);">
+               style="width: 100%; padding: 16px 18px; font-size: 16px; border-radius: 8px; border: 1px solid var(--border-color); background-color: rgba(255,255,255,0.1); color: var(--text-color);">
         {% if form.username.errors %}
-        <p class="error-message" style="color: var(--hover-color); font-size: 14px;">{{ form.username.errors.0 }}</p>
+          <p style="color: var(--hover-color); font-size: 14px;">{{ form.username.errors.0 }}</p>
         {% endif %}
       </div>
 
+      <!-- Email -->
       <div style="margin-bottom: 1.5rem;">
-        <label for="{{ form.password.id_for_label }}" style="display: block; font-weight: 500; color: var(--text-color); margin-bottom: 0.5rem;">
-          <i class="fas fa-lock"></i> Password
+        <label for="{{ form.email.id_for_label }}" style="display: block; font-weight: 500; margin-bottom: 0.5rem; color: var(--text-color);">
+          <i class="fas fa-envelope mr-2"></i> Email
         </label>
-        <input type="password" name="{{ form.password.name }}" id="{{ form.password.id_for_label }}"
-               class="w-full" placeholder="Enter your password" required
-               style="width: 100%; padding: 14px 16px; border-radius: 8px; border: 1px solid var(--border-color); background-color: rgba(255,255,255,0.1); color: var(--text-color);">
-        {% if form.password.errors %}
-        <p class="error-message" style="color: var(--hover-color); font-size: 14px;">{{ form.password.errors.0 }}</p>
+        <input type="email" name="{{ form.email.name }}" id="{{ form.email.id_for_label }}"
+               placeholder="Enter your email" required
+               value="{{ form.email.value|default_if_none:'' }}"
+               style="width: 100%; padding: 16px 18px; font-size: 16px; border-radius: 8px; border: 1px solid var(--border-color); background-color: rgba(255,255,255,0.1); color: var(--text-color);">
+        {% if form.email.errors %}
+          <p style="color: var(--hover-color); font-size: 14px;">{{ form.email.errors.0 }}</p>
+        {% endif %}
+      </div>
+
+      <!-- Password1 -->
+      <div style="margin-bottom: 1.5rem;">
+        <label for="{{ form.password1.id_for_label }}" style="display: block; font-weight: 500; margin-bottom: 0.5rem; color: var(--text-color);">
+          <i class="fas fa-lock mr-2"></i> Password
+        </label>
+        <input type="password" name="{{ form.password1.name }}" id="{{ form.password1.id_for_label }}"
+               placeholder="Create a password" required
+               style="width: 100%; padding: 16px 18px; font-size: 16px; border-radius: 8px; border: 1px solid var(--border-color); background-color: rgba(255,255,255,0.1); color: var(--text-color);">
+        {% if form.password1.errors %}
+          <p style="color: var(--hover-color); font-size: 14px;">{{ form.password1.errors.0 }}</p>
+        {% endif %}
+      </div>
+
+      <!-- Password2 -->
+      <div style="margin-bottom: 1.5rem;">
+        <label for="{{ form.password2.id_for_label }}" style="display: block; font-weight: 500; margin-bottom: 0.5rem; color: var(--text-color);">
+          <i class="fas fa-lock mr-2"></i> Confirm Password
+        </label>
+        <input type="password" name="{{ form.password2.name }}" id="{{ form.password2.id_for_label }}"
+               placeholder="Repeat your password" required
+               style="width: 100%; padding: 16px 18px; font-size: 16px; border-radius: 8px; border: 1px solid var(--border-color); background-color: rgba(255,255,255,0.1); color: var(--text-color);">
+        {% if form.password2.errors %}
+          <p style="color: var(--hover-color); font-size: 14px;">{{ form.password2.errors.0 }}</p>
         {% endif %}
       </div>
 
       {% if form.non_field_errors %}
-      <p class="error-message text-center" style="color: var(--hover-color); font-size: 14px; margin-bottom: 1.5rem;">
+      <p style="color: var(--hover-color); font-size: 14px; margin-bottom: 1rem; text-align: center;">
         {{ form.non_field_errors.0 }}
       </p>
       {% endif %}
 
-      <button type="submit" class="cta-button w-full" style="width: 100%; padding: 14px 16px; border-radius: 8px;">
-        Log In
+      <button type="submit" class="cta-button w-full" style="width: 100%; padding: 16px; font-size: 16px; border-radius: 8px;">
+        Create Account
       </button>
     </form>
 
-    <div class="text-center mt-6" style="margin-top: 1.5rem;">
-      <p style="color: var(--text-color); opacity: 0.8;">
-        Don't have an account?
-        <a href="{% url 'accounts:signup' %}" style="color: var(--primary-color); text-decoration: underline;">Sign up</a>
-      </p>
-      <p style="margin-top: 0.5rem;">
-        <a href="" style="color: var(--primary-color); text-decoration: underline;">Forgot password?</a>
-      </p>
-    </div>
+    <p class="text-center mt-6" style="margin-top: 1.5rem; color: var(--text-color); opacity: 0.8;">
+      Already have an account?
+      <a href="{% url 'accounts:login' %}" style="color: var(--primary-color); text-decoration: underline;">Log in</a>
+    </p>
   </div>
 </section>
 {% endblock %}
+
+{% block footer %}{% endblock %}

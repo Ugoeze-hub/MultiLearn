@@ -18,16 +18,14 @@ def team_view(request):
 def signup_view(request):
     if request.method == 'POST':
         form = SignUpForm(request.POST)
-
         if form.is_valid():
-            user = form.save()
-            login(request, user) #this makes the user login automatically after signup
-            return redirect('quizzes/dashboard')
-        
+            form.save()  # Save the user but don't log in
+            return redirect('accounts:login')  # Redirect to login page
     else:
         form = SignUpForm()
 
     return render(request, 'accounts/signup.html', {'form': form})
+
     
 
 def login_view(request):
