@@ -4,8 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     {% load static %}
-    <title>MyLearnQuest</title>
-    <link rel="icon" type="image/jpeg" href="/Multilearn/static/img/ico.png" />
+    <title>Multilearn</title>
+    <link rel="icon" type="image/jpeg/png" href="{% static 'img/ico.png' %}" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
@@ -20,7 +20,7 @@
       <div data-barba="container" data-barba-namespace="home">
         <nav>
           <div class="container nav__container">
-            <a href="/"><h4>MyLearnQuest</h4></a>
+            <a href="/"><h4>Multilearn</h4></a>
             <ul class="nav__menu">
               <li><a href="/"><strong>Home</strong></a></li>
               <li><a href="/service"><strong>Services</strong></a></li>
@@ -53,7 +53,7 @@
     <h1>Discover the best learning resources across top platforms</h1>
     <p>
       <strong>
-        MyLearnQuest helps you find high-quality free and premium courses from YouTube, Udemy, Coursera and more.
+        Multilearn helps you find high-quality free and premium courses from YouTube, Udemy, Coursera and more.
         We simplify your search for the perfect learning materials to advance your skills.
       </strong>
     </p>
@@ -61,7 +61,7 @@
   </div>
 
   <div class="hero__media">
-    <img src="/Multilearn/static/img/book.png" alt="Learning Illustration" class="hero__image" />
+    <img src=  "{% static 'img/ico.png' %}" alt="Learning Illustration" class="hero__image" />
   </div>
 </section>
 
@@ -164,10 +164,10 @@
             <article class="faq">
               <div class="faq__icon"><i class="uil uil-plus"></i></div>
               <div class="question__answer">
-                <h4><strong>What is MyLearnQuest?</strong></h4>
+                <h4><strong>What is MultiLearn?</strong></h4>
                 <p>
                   <strong>
-                    MyLearnQuest is a discovery platform that helps you find the best learning resources across multiple platforms. 
+                    MultiLearn is a discovery platform that helps you find the best learning resources across multiple platforms. 
                     We don't create courses - we help you discover existing high-quality content.
                   </strong>
                 </p>
@@ -178,7 +178,7 @@
               <div class="faq__icon"><i class="uil uil-plus"></i></div>
               <div class="question__answer">
                 <h4>
-                  <strong>How does MyLearnQuest help me learn?</strong>
+                  <strong>How does MultiLearn help me learn?</strong>
                 </h4>
                 <p>
                   <strong>
@@ -192,7 +192,7 @@
             <article class="faq">
               <div class="faq__icon"><i class="uil uil-plus"></i></div>
               <div class="question__answer">
-                <h4><strong>Does MyLearnQuest offer certificates?</strong></h4>
+                <h4><strong>Does MultiLearn offer certificates?</strong></h4>
                 <p>
                   <strong>
                     While we don't issue certificates ourselves, we can help you find certificate programs offered by 
@@ -253,7 +253,7 @@
           <div class="swiper-wrapper">
             <article class="testimonial swiper-slide">
               <div class="avatar">
-                <img src="/Multilearn/static/img/avtr.jpeg" alt="Mark Sylvester's Image" loading="lazy" />
+                <img src="{% static 'img/avtr.jpeg' %}" alt="Mark Sylvester's Image" loading="lazy" />
               </div>
               <div class="testimonial__info">
                 <h5>Mark Sylvester</h5>
@@ -262,7 +262,7 @@
               <div class="testimonial__body">
                 <p>
                   <strong>
-                    "MyLearnQuest helped me discover the perfect blockchain tutorials across YouTube and Udemy that I would have never found on my own. Saved me countless hours of searching!"
+                    "MultiLearn helped me discover the perfect blockchain tutorials across YouTube and Udemy that I would have never found on my own. Saved me countless hours of searching!"
                   </strong>
                 </p>
               </div>
@@ -270,7 +270,7 @@
 
             <article class="testimonial swiper-slide">
               <div class="avatar">
-                <img src="/Multilearn/static/img/avtr2.jpeg" alt="Mark Image" loading="lazy" />
+                <img src="{% static 'img/avtr2.jpeg' %}" alt="Mark Image" loading="lazy" />
               </div>
               <div class="testimonial__info">
                 <h5>Cole Mark</h5>
@@ -279,7 +279,7 @@
               <div class="testimonial__body">
                 <p>
                   <strong>
-                    "The curated design course recommendations from MyLearnQuest helped me advance my skills faster than ever. I found hidden gems on Coursera and YouTube I didn't know existed."
+                    "The curated design course recommendations from MultiLearn helped me advance my skills faster than ever. I found hidden gems on Coursera and YouTube I didn't know existed."
                   </strong>
                 </p>
               </div>
@@ -287,7 +287,7 @@
 
             <article class="testimonial swiper-slide">
               <div class="avatar">
-                <img src="/Multilearn/static/img/avtr3.jpeg" alt="James Anderson's Image" loading="lazy" />
+                <img src="{% static 'img/avtr3.jpeg' %}" alt="James Anderson's Image" loading="lazy" />
               </div>
               <div class="testimonial__info">
                 <h5>Eluchie Ugoeze</h5>
@@ -296,7 +296,7 @@
               <div class="testimonial__body">
                 <p>
                   <strong>
-                    "MyLearnQuest's smart filters helped me compare similar courses across different platforms to find the perfect fit for my learning style and budget."
+                    "MultiLearn's smart filters helped me compare similar courses across different platforms to find the perfect fit for my learning style and budget."
                   </strong>
                 </p>
               </div>
@@ -304,7 +304,7 @@
 
             <article class="testimonial swiper-slide">
               <div class="avatar">
-                <img src="/Multilearn/static/img/avtr4.jpeg" alt="Lila Bennett's Image" loading="lazy" />
+                <img src="{% static 'img/avtr4.jpeg' %}" alt="Lila Bennett's Image" loading="lazy" />
               </div>
               <div class="testimonial__info">
                 <h5>Lila Bennett</h5>
@@ -313,7 +313,7 @@
               <div class="testimonial__body">
                 <p>
                   <strong>
-                    "As someone new to data science, MyLearnQuest helped me navigate the overwhelming number of course options and find the best beginner-friendly resources."
+                    "As someone new to data science, MultiLearn helped me navigate the overwhelming number of course options and find the best beginner-friendly resources."
                   </strong>
                 </p>
               </div>
@@ -321,7 +321,7 @@
 
             <article class="testimonial swiper-slide">
               <div class="avatar">
-                <img src="/Multilearn/static/img/avtr5.jpeg" alt="Ethan Clarke's Image" loading="lazy" />
+                <img src="{% static 'img/avtr5.jpeg' %}" alt="Ethan Clarke's Image" loading="lazy" />
               </div>
               <div class="testimonial__info">
                 <h5>Ethan Clarke</h5>
@@ -330,7 +330,7 @@
               <div class="testimonial__body">
                 <p>
                   <strong>
-                    "MyLearnQuest's recommendations kept me updated with the most relevant web development tutorials across platforms, saving me hours of research time."
+                    "MultiLearn's recommendations kept me updated with the most relevant web development tutorials across platforms, saving me hours of research time."
                   </strong>
                 </p>
               </div>
@@ -342,7 +342,7 @@
           <div class="container footer__container">
             <div class="footer__1">
               <a
-                href="/index"
+                href="/index_2"
                 class="footer__logo"
                 aria-label="Navigate to homepage"
               >
@@ -356,7 +356,7 @@
             <div class="footer__2">
               <h4>Permalinks</h4>
               <ul class="permalinks">
-                <li><a href="/index">Home</a></li>
+                <li><a href="/index_2">Home</a></li>
                 <li><a href="/about">About</a></li>
                 <li><a href="/courses">Courses</a></li>
                 <li><a href="/contact">Contact</a></li>
@@ -412,7 +412,7 @@
     
     <script src="https://unpkg.com/@barba/core"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    <script src="/Multilearn/static/java/main.js"></script>
+    <script src="{% static 'java/main.js' %}"></script>
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script>
       var swiper = new Swiper(".mySwiper", {
