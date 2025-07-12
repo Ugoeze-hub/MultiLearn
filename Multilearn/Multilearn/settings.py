@@ -99,14 +99,7 @@ if db_url:
             }       
         }
     }
-else:
-    # Fallback to SQLite for development
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
-        }
-    }
+
 
 YOUTUBE_API_KEY = os.getenv('YOUTUBE_API_KEY')
 # Password validation
@@ -150,7 +143,7 @@ STATICFILES_DIRS = [
 ]
 
 # Use WhiteNoise for static files
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+# STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
