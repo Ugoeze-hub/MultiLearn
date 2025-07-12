@@ -26,12 +26,12 @@ print("✅ DATABASE_URL:", os.getenv("DATABASE_URL"))
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-3s@&#w6490q(iepsnj*-u(xwbbhddl2)be8s7b98c0exoqrzs*'
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = os.getenv('DEBUG', 'False').lower() == 'true'
 
-ALLOWED_HOSTS = ['127.0.0.1', '.vercel.app']
+ALLOWED_HOSTS = ['127.0.0.1', '.vercel.app', 'localhost']
 LOGIN_URL = '/login/' 
 LOGIN_REDIRECT_URL = 'quizzes:dashboard' 
 LOGOUT_REDIRECT_URL = 'home'
@@ -84,24 +84,29 @@ WSGI_APPLICATION = 'Multilearn.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 db_url = os.getenv("DATABASE_URL")
-if not db_url:
-    raise Exception("🚨 DATABASE_URL not found in environment")
-
-tmpPostgres = urlparse(db_url)
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': tmpPostgres.path[1:],
-        'USER': tmpPostgres.username,
-        'PASSWORD': tmpPostgres.password,
-        'HOST': tmpPostgres.hostname,
-        'PORT': 5432,
-        # 'OPTIONS': dict(parse_qsl(tmpPostgres.query)),
-        'OPTIONS': {
-            'sslmode': 'require'  # Required for Neon
-        }       
+if db_url:
+    tmpPostgres = urlparse(db_url)
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': tmpPostgres.path[1:],
+            'USER': tmpPostgres.username,
+            'PASSWORD': tmpPostgres.password,
+            'HOST': tmpPostgres.hostname,
+            'PORT': 5432,
+            'OPTIONS': {
+                'sslmode': 'require'  # Required for Neon
+            }       
+        }
     }
-}
+else:
+    # Fallback to SQLite for development
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 
 YOUTUBE_API_KEY = os.getenv('YOUTUBE_API_KEY')
 # Password validation
@@ -140,6 +145,11 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+]
+
+# Use WhiteNoise for static files
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Default primary key field type

@@ -1,21 +1,42 @@
 {% extends "base.html" %}
-│   │   │   {% block content %}
-│   │   │     <h2>{{ course.title }}</h2>
-│   │   │     <p>Source: {{ course.source }}{% if course.is_paid %} <span style="color:red;">(Paid){% else %} <span style="color:green;">(Free){% endif %}</span></p>
-│   │   │     {% if course.video_id %}
-│   │   │       <iframe width="640" height="360" src="https://www.youtube.com/embed/{{ course.video_id }}" frameborder="0" allowfullscreen></iframe>
-│   │   │     {% else %}
-│   │   │       {% if course.thumbnail %}
-│   │   │         <img src="{{ course.thumbnail }}" alt="{{ course.title }}" style="max-width:100%;">
-│   │   │       {% endif %}
-│   │   │       <p><a href="{{ course.url }}" target="_blank">Go to {{ course.source }}</a></p>
-│   │   │     {% endif %}
-│   │   │     <p>{{ course.description }}</p>
-│   │   │     <form method="post" action="{% url 'quizzes:enroll_course_by_url' %}">
-│   │   │       {% csrf_token %}
-                {% for field, value in course.items %}
-                    <input type="hidden" name="{{field}}" value="{{ value }}">
-│   │   │       {% endfor %}
-│   │   │       <button type="submit">Enroll in this Course</button>
-│   │   │     </form>
-│   │   │   {% endblock %}
+{% block content %}
+<div class="course-detail-container">
+    <h2>{{ course.title }}</h2>
+    <p>Source: {{ course.source }}
+        {% if course.is_paid %}
+            <span style="color:red;">(Paid)</span>
+        {% else %}
+            <span style="color:green;">(Free)</span>
+        {% endif %}
+    </p>
+    
+    {% if course.video_id %}
+        <div class="video-container">
+            <iframe 
+                width="640" 
+                height="360" 
+                src="https://www.youtube.com/embed/{{ course.video_id }}" 
+                frameborder="0" 
+                allowfullscreen>
+            </iframe>
+        </div>
+    {% else %}
+        {% if course.thumbnail %}
+            <img src="{{ course.thumbnail }}" alt="{{ course.title }}" style="max-width:100%;">
+        {% endif %}
+        <p><a href="{{ course.url }}" target="_blank" class="btn btn-primary">Go to {{ course.source }}</a></p>
+    {% endif %}
+    
+    {% if course.description %}
+        <p>{{ course.description }}</p>
+    {% endif %}
+    
+    <form method="post" action="{% url 'quizzes:enroll_course' %}">
+        {% csrf_token %}
+        {% for field, value in course.items %}
+            <input type="hidden" name="{{field}}" value="{{ value }}">
+        {% endfor %}
+        <button type="submit" class="btn btn-success">Enroll in this Course</button>
+    </form>
+</div>
+{% endblock %}

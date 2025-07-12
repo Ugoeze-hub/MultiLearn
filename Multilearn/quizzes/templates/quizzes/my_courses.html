@@ -26,6 +26,14 @@
                     {% endif %}
                 </p>
                 <p>Added: {{ enrollment.added_on|date:"M d, Y H:i" }}</p>
+                <div class="course-actions">
+                    {% if enrollment.course.video_id %}
+                        <a href="https://www.youtube.com/watch?v={{ enrollment.course.video_id }}" target="_blank" class="btn btn-watch">
+                            <i class="fab fa-youtube"></i> Watch on YouTube
+                        </a>
+                    {% endif %}
+                    <a href="{% url 'quizzes:course_detail' enrollment.course.id %}" class="btn btn-enroll">View Details</a>
+                </div>
             </div>
         </div>
         {% empty %}

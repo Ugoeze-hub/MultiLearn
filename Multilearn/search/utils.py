@@ -8,33 +8,41 @@ load_dotenv()
 
 
 def fetch_youtube_courses(query, max_results=10, page_token=None):
-    youtube = build('youtube', 'v3', developerKey=settings.YOUTUBE_API_KEY)
-    search_resp = youtube.search().list(
-        q=query,
-        part='snippet', #this is to get the title, description fom the videos
-        type='video', 
-        maxResults=max_results,
-        pageToken=page_token
-    ).execute()
-    
-    results = []
-    for item in search_resp.get('items', []):
-        vid = item['id']['videoId']
-        snip = item['snippet']
+    try:
+        if not settings.YOUTUBE_API_KEY:
+            print("⚠️ YOUTUBE_API_KEY not found in settings")
+            return [], None
+            
+        youtube = build('youtube', 'v3', developerKey=settings.YOUTUBE_API_KEY)
+        search_resp = youtube.search().list(
+            q=query,
+            part='snippet', #this is to get the title, description fom the videos
+            type='video', 
+            maxResults=max_results,
+            pageToken=page_token
+        ).execute()
+        
+        results = []
+        for item in search_resp.get('items', []):
+            vid = item['id']['videoId']
+            snip = item['snippet']
 
-        results.append({
-            'title': snip['title'],
-            'description': snip['description'],
-            'url': f'https://www.youtube.com/watch?v={vid}',
-            'source': 'Youtube',
-            'video_id': vid,
-            'thumbnail': snip['thumbnails']['medium']['url'],
-            'is_paid': False
-        })
-    print("YOUTUBE API KEY:", settings.YOUTUBE_API_KEY)
-    print("Search Response:", search_resp)
-    next_page_token = search_resp.get('nextPageToken')
-    return results, next_page_token
+            results.append({
+                'title': snip['title'],
+                'description': snip['description'],
+                'url': f'https://www.youtube.com/watch?v={vid}',
+                'source': 'Youtube',
+                'video_id': vid,
+                'thumbnail': snip['thumbnails']['medium']['url'],
+                'is_paid': False
+            })
+        print("✅ YouTube API working - found", len(results), "videos")
+        next_page_token = search_resp.get('nextPageToken')
+        return results, next_page_token
+        
+    except Exception as e:
+        print(f"❌ YouTube API Error: {str(e)}")
+        return [], None
 
 
 def fetch_udemy_courses(query):
@@ -96,7 +104,7 @@ def fetch_cousera_courses(query):
 
 def fetch_courses(query, page=1, page_token=None):
     youtube_results, next_page_token = fetch_youtube_courses(query, max_results=10, page_token=page_token)
-    coursera_results = fetch_cousera_courses(query, page)
+    coursera_results = fetch_cousera_courses(query)
     
     results = []
     max_length = max(len(youtube_results), len(coursera_results))
@@ -106,4 +114,4 @@ def fetch_courses(query, page=1, page_token=None):
         if i < len(coursera_results):
             results.append(coursera_results[i])
     
-    return results, next_page_token, page
+    return results, next_page_token

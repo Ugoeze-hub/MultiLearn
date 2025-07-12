@@ -52,9 +52,9 @@ def dashboard_view(request):
     recommendations = []
     if past_searches.exists():
         recent_query = past_searches.latest('searched_at').query
-        recommendations, _, _ = fetch_courses(f'{recent_query} tutorial')
+        recommendations, _ = fetch_courses(f'{recent_query} tutorial')
     else:
-        recommendations, _, _ = fetch_courses('python tutorial')  # Default
+        recommendations, _ = fetch_courses('python tutorial')  # Default
     return render(request, 'quizzes/dashboard.html', {
         'recommendations': recommendations,
         'enrollments': enrollments,

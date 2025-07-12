@@ -31,17 +31,24 @@
                         <span style="color:green;">Free</span>
                     {% endif %}
                 </p>
-                <form method="post" action="{% url 'quizzes:enroll_course' %}" style="display:inline;">
-                    {% csrf_token %}
-                    <input type="hidden" name="title" value="{{ course.title }}">
-                    <input type="hidden" name="url" value="{{ course.url }}">
-                    <input type="hidden" name="source" value="{{ course.source }}">
-                    <input type="hidden" name="thumbnail" value="{{ course.thumbnail }}">
-                    <input type="hidden" name="is_paid" value="{{ course.is_paid }}">
-                    <input type="hidden" name="video_id" value="{{ course.video_id|default:'' }}">
-                    <input type="hidden" name="description" value="{{ course.description|default:'' }}">
-                    <button type="submit" class="search-bar button">Enroll</button>
-                </form>
+                <div class="course-actions">
+                    {% if course.video_id %}
+                        <a href="https://www.youtube.com/watch?v={{ course.video_id }}" target="_blank" class="btn btn-watch">
+                            <i class="fab fa-youtube"></i> Watch on YouTube
+                        </a>
+                    {% endif %}
+                    <form method="post" action="{% url 'quizzes:enroll_course' %}" style="display:inline;">
+                        {% csrf_token %}
+                        <input type="hidden" name="title" value="{{ course.title }}">
+                        <input type="hidden" name="url" value="{{ course.url }}">
+                        <input type="hidden" name="source" value="{{ course.source }}">
+                        <input type="hidden" name="thumbnail" value="{{ course.thumbnail }}">
+                        <input type="hidden" name="is_paid" value="{{ course.is_paid }}">
+                        <input type="hidden" name="video_id" value="{{ course.video_id|default:'' }}">
+                        <input type="hidden" name="description" value="{{ course.description|default:'' }}">
+                        <button type="submit" class="btn btn-enroll">Enroll</button>
+                    </form>
+                </div>
             </div>
         </div>
         {% empty %}
