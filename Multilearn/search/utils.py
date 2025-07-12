@@ -96,7 +96,7 @@ def fetch_cousera_courses(query):
 
 def fetch_courses(query, page=1, page_token=None):
     youtube_results, next_page_token = fetch_youtube_courses(query, max_results=10, page_token=page_token)
-    coursera_results = fetch_cousera_courses(query)
+    coursera_results = fetch_cousera_courses(query, page)
     
     results = []
     max_length = max(len(youtube_results), len(coursera_results))
