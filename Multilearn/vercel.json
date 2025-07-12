@@ -2,7 +2,7 @@
   "version": 2,
   "builds": [
     {
-      "src": "Multilearn/wsgi.py",
+      "src": "Multilearn/Multilearn/wsgi.py",
       "use": "@vercel/python",
       "config": { 
         "maxLambdaSize": "50mb", 
@@ -17,7 +17,7 @@
     },
     { 
       "src": "/(.*)", 
-      "dest": "Multilearn/wsgi.py" 
+      "dest": "Multilearn/Multilearn/wsgi.py"
     }
   ],
   "env": {

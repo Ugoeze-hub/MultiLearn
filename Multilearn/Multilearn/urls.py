@@ -20,8 +20,8 @@ from accounts import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('accounts.urls', namespace='accounts')),
-    path('', include('search.urls', namespace='search')),
-    path('', include('quizzes.urls', namespace='quizzes')),
-    path('', views.landing_page), 
+    path('', views.landing_page, name='home'),  # Home page at /
+    path('accounts/', include('accounts.urls', namespace='accounts')),
+    path('search/', include('search.urls', namespace='search')),
+    path('quizzes/', include('quizzes.urls', namespace='quizzes')),
 ]
