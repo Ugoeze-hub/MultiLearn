@@ -23,5 +23,5 @@ urlpatterns = [
     path('', include('accounts.urls', namespace='accounts')),
     path('', include('search.urls', namespace='search')),
     path('', include('quizzes.urls', namespace='quizzes')),
-    path('', views.index), 
+    path('', views.landing_page),
 ]
