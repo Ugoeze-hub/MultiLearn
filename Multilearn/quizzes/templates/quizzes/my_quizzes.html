@@ -1,28 +1,160 @@
 {% extends "quizzes/dashboard.html" %}
-
 {% block content %}
-<div class="search-container">
-    <h2>My Quizzes</h2>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+  :root {
+    --bg: #f9fafb;
+    --text-primary: #1f2937;
+    --text-secondary: #6b7280;
+    --card-bg: #ffffff;
+    --border: #e5e7eb;
+    --badge-easy: #10b981;
+    --badge-medium: #facc15;
+    --badge-hard: #ef4444;
+    --progress-bg: #e5e7eb;
+    --progress-fill: linear-gradient(90deg, #4f46e5 0%, #7c3aed 100%);
+  }
+
+  .dark-mode {
+    --bg: #111827;
+    --text-primary: #f3f4f6;
+    --text-secondary: #9ca3af;
+    --card-bg: #1f2937;
+    --border: #374151;
+    --badge-easy: #34d399;
+    --badge-medium: #fde68a;
+    --badge-hard: #f87171;
+    --progress-bg: #374151;
+    --progress-fill: linear-gradient(90deg, #818cf8 0%, #a78bfa 100%);
+  }
+
+  .gradient-bg {
+    background: linear-gradient(135deg, #6b73ff 0%, #000dff 100%);
+  }
+
+  .course-card {
+    transition: transform 0.3s ease;
+    border: 1px solid var(--border);
+  }
+
+  .course-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+  }
+
+  .progress-bar {
+    height: 8px;
+    border-radius: 4px;
+    background-color: var(--progress-bg);
+  }
+
+  .progress-fill {
+    height: 100%;
+    border-radius: 4px;
+    background: var(--progress-fill);
+  }
+
+  .text-primary {
+    color: var(--text-primary);
+  }
+
+  .text-secondary {
+    color: var(--text-secondary);
+  }
+
+  .card-bg {
+    background: var(--card-bg);
+  }
+
+  .badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 500;
+  }
+
+  .badge-easy {
+    background-color: rgba(16, 185, 129, 0.15);
+    color: var(--badge-easy);
+  }
+
+  .badge-medium {
+    background-color: rgba(250, 204, 21, 0.15);
+    color: var(--badge-medium);
+  }
+
+  .badge-hard {
+    background-color: rgba(239, 68, 68, 0.15);
+    color: var(--badge-hard);
+  }
+</style>
+
+<body class="min-h-screen px-4 py-8" style="background-color: var(--bg);">
+  <div class="max-w-7xl mx-auto">
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+      <div>
+        <h1 class="text-3xl font-bold text-primary">My Quiz Results</h1>
+        <p class="mt-2 text-secondary">Track your learning progress and performance</p>
+      </div>
+      <a href="{% url 'quizzes:create_quiz' %}" class="gradient-bg text-white px-6 py-3 rounded-lg font-medium hover:opacity-90 transition-all shadow-md flex items-center gap-2">
+        <i class="fas fa-plus"></i>
+        <span>Create New Quiz</span>
+      </a>
+    </div>
+
     {% if quizzes %}
-    <div class="course-grid">
-        {% for quiz in quizzes %}
-        <div class="course-card">
-            <div class="course-img">
-                <i class="fas fa-chart-line fa-3x"></i>
-            </div>
-            <div class="course-info">
-                <h3 class="course-title">{{ quiz.topic }}</h3>
-                <p class="course-instructor">Difficulty: {{ quiz.difficulty|title }}</p>
-                <p>Score: {{ quiz.score }} / {{ quiz.total_questions }}</p>
-                <p>Date Taken: {{ quiz.taken_at|date:"Y-m-d H:i" }}</p>
-                <a href="{% url 'quizzes:quiz_result' quiz.id %}" class="search-bar button">View Results</a>
-            </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {% for quiz in quizzes %}
+      <div class="course-card rounded-xl overflow-hidden transition-all duration-300 card-bg">
+        <div class="gradient-bg p-6 flex justify-center">
+          <div class="bg-white bg-opacity-20 p-4 rounded-full">
+            <i class="fas fa-chart-line fa-3x text-white"></i>
+          </div>
         </div>
-        {% endfor %}
+        <div class="p-6">
+          <div class="flex justify-between items-start mb-2">
+            <h3 class="text-xl font-semibold text-primary">{{ quiz.topic }}</h3>
+            <span class="badge {% if quiz.difficulty == 'easy' %}badge-easy{% elif quiz.difficulty == 'medium' %}badge-medium{% else %}badge-hard{% endif %}">
+              {{ quiz.difficulty|title }}
+            </span>
+          </div>
+
+          <div class="my-4">
+            <div class="flex justify-between text-sm text-secondary mb-1">
+              <span>Score</span>
+              <span>{{ quiz.score }} / {{ quiz.total_questions }}</span>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-fill" style="width: {% widthratio quiz.score quiz.total_questions 100 %}%"></div>
+            </div>
+          </div>
+
+          <div class="flex items-center text-secondary text-sm mb-4">
+            <i class="far fa-calendar-alt mr-2"></i>
+            <span>{{ quiz.taken_at|date:"Y-m-d H:i" }}</span>
+          </div>
+
+          <a href="{% url 'quizzes:quiz_result' quiz.id %}" class="w-full block text-center gradient-bg text-white px-4 py-2 rounded-lg font-medium hover:opacity-90 transition-all">
+            View Detailed Results
+          </a>
+        </div>
+      </div>
+      {% endfor %}
     </div>
     {% else %}
-    <p>You haven't taken any quizzes yet.</p>
-    <a href="{% url 'quizzes:create_quiz' %}" class="search-bar button">Create a New Quiz</a>
+    <div class="card-bg rounded-xl shadow-sm p-8 text-center max-w-2xl mx-auto mt-8">
+      <div class="bg-blue-50 dark:bg-gray-800 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4">
+        <i class="fas fa-question-circle text-blue-500 text-3xl"></i>
+      </div>
+      <h3 class="text-xl font-medium text-primary mb-2">No Quiz Results Yet</h3>
+      <p class="text-secondary mb-6">You haven't taken any quizzes yet. Start your learning journey by creating a new quiz!</p>
+      <a href="{% url 'quizzes:create_quiz' %}" class="gradient-bg text-white px-6 py-3 rounded-lg font-medium hover:opacity-90 transition-all shadow-md inline-block">
+        Create Your First Quiz
+      </a>
+    </div>
     {% endif %}
-</div>
+  </div>
+</body>
 {% endblock %}
