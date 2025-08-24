@@ -1,0 +1,253 @@
+{% extends "quizzes/dashboard.html" %}
+{% block content %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+<style>
+  :root {
+    --primary-color: #4f46e5;
+    --accent-color: #4cc9f0;
+    --text-color: #1f2937;
+    --bg-color: #f9fafb;
+    --card-bg: #ffffff;
+    --border-color: #e5e7eb;
+  }
+
+  .dark-mode {
+    --primary-color: #818cf8;
+    --accent-color: #22d3ee;
+    --text-color: #f9fafb;
+    --bg-color: #111827;
+    --card-bg: #1f2937;
+    --border-color: #374151;
+  }
+
+  body {
+    background: var(--bg-color);
+    color: var(--text-color);
+  }
+
+  .search-container {
+    max-width: 700px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+  }
+
+  .quiz-header {
+    text-align: center;
+    margin-bottom: 2rem;
+    position: relative;
+  }
+
+  .quiz-header h2 {
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+    color: var(--text-color);
+  }
+
+  .timer {
+    background: var(--accent-color);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-weight: bold;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    justify-content: center;
+  }
+
+  .quiz-card {
+    background: var(--card-bg);
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    overflow: hidden;
+    transition: 0.3s;
+  }
+
+  .quiz-img {
+    background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+    color: white;
+    text-align: center;
+    padding: 2rem 0;
+  }
+
+  .quiz-img i {
+    font-size: 3rem;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+  }
+
+  .quiz-info {
+    padding: 2rem;
+  }
+
+  .question-container {
+    display: none;
+    animation: fade 0.5s ease-in-out;
+  }
+
+  .question-container.active {
+    display: block;
+  }
+
+  @keyframes fade {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .question-text {
+    font-weight: 600;
+    margin-bottom: 1rem;
+  }
+
+  .options-container {
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  .option-label {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    border: 1px solid var(--border-color);
+    transition: 0.3s;
+  }
+
+  .option-label:hover {
+    background-color: rgba(0,0,0,0.03);
+  }
+
+  .option-input {
+    margin-right: 1rem;
+    accent-color: var(--primary-color);
+  }
+
+  .button-container {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: 2rem;
+  }
+
+  .button {
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+
+  .button-primary {
+    background: var(--primary-color);
+    color: white;
+  }
+
+  .button-primary:hover {
+    background: #4338ca;
+  }
+
+  .button-secondary {
+    background: transparent;
+    color: var(--primary-color);
+    border: 2px solid var(--primary-color);
+  }
+
+  .button-secondary:hover {
+    background: var(--bg-color);
+  }
+</style>
+
+<div class="search-container">
+  <div class="quiz-header">
+    <h2>{{ quiz.topic|title }} Quiz ({{ quiz.difficulty|title }})</h2>
+    <div class="timer">
+      <i class="fas fa-clock"></i> <span id="time">00:00</span>
+    </div>
+  </div>
+
+  <form method="post" action="{% url 'quizzes:take_quiz' quiz.id %}">
+    {% csrf_token %}
+    <div class="quiz-card">
+      <div class="quiz-img">
+        <i class="fas fa-question-circle"></i>
+      </div>
+      <div class="quiz-info">
+        {% for field in form %}
+        <div class="question-container {% if forloop.first %}active{% endif %}">
+          <div class="question-text">{{ field.label }}</div>
+          <div class="options-container">
+            {% for choice in field %}
+            <label class="option-label">
+              <input type="radio" class="option-input" name="{{ field.name }}" value="{{ choice.data.value }}" required />
+              {{ choice.choice_label }}
+            </label>
+            {% endfor %}
+        </div>
+        </div>
+        {% endfor %}
+
+        <div class="button-container">
+          <button type="button" class="button button-secondary" id="prevBtn">Previous</button>
+          <button type="button" class="button button-secondary" id="nextBtn">Next</button>
+          <button type="submit" class="button button-primary">Submit Quiz</button>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+
+<script>
+  // Timer
+  document.addEventListener("DOMContentLoaded", function () {
+    let seconds = 0;
+    const timerElement = document.getElementById("time");
+    const timer = setInterval(() => {
+      seconds++;
+      const minutes = Math.floor(seconds / 60);
+      const sec = seconds % 60;
+      timerElement.textContent = `${String(minutes).padStart(2, "0")}:${String(sec).padStart(2, "0")}`;
+    }, 1000);
+    document.querySelector("form").addEventListener("submit", () => clearInterval(timer));
+  });
+
+  // Slide Between Questions
+  const questions = document.querySelectorAll(".question-container");
+  const nextBtn = document.getElementById("nextBtn");
+  const prevBtn = document.getElementById("prevBtn");
+  let currentIndex = 0;
+
+  function showQuestion(index) {
+    questions.forEach((q, i) => {
+      q.classList.remove("active");
+      if (i === index) q.classList.add("active");
+    });
+    prevBtn.style.display = index === 0 ? "none" : "inline-block";
+    nextBtn.style.display = index === questions.length - 1 ? "none" : "inline-block";
+  }
+
+  nextBtn.addEventListener("click", () => {
+    if (currentIndex < questions.length - 1) {
+      currentIndex++;
+      showQuestion(currentIndex);
+    }
+  });
+
+  prevBtn.addEventListener("click", () => {
+    if (currentIndex > 0) {
+      currentIndex--;
+      showQuestion(currentIndex);
+    }
+  });
+
+  // Initialize
+  showQuestion(0);
+</script>
+{% endblock %}

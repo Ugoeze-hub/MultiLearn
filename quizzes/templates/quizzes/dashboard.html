@@ -60,17 +60,17 @@
             position: sticky;
             top: 0;
             z-index: 100;
+            -webkit-backdrop-filter: blur(10px);
             backdrop-filter: blur(10px);
         }
 
         .logo {
+            display: flex;
+            align-items: center;
             font-size: 1.5rem;
             font-weight: 700;
             color: var(--primary-color);
-        }
-
-        .logo span {
-            color: blue;
+            text-decoration: none;
         }
 
         .nav-toggle {
@@ -355,7 +355,10 @@
 <body>
     <div class="dashboard">
         <header>
-            <div class="logo">Multi<span>learn</span></div>
+            <a href="#" class="logo">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span> Multilearn</span>
+                </a>
             <div class="user-profile">
                 <div class="user-name">Welcome, {{ user.username }}</div>
                 <div class="user-avatar">{{ user.username|slice:":2"|upper }}</div>
