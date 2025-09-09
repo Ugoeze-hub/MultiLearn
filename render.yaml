@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: multilearn
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn Multilearn.wsgi
+    envVars:
+      - key: DJANGO_SETTINGS_MODULE
+        value: Multilearn.settings
+      - key: SECRET_KEY
+        sync: false
+      - key: DATABASE_URL
+        sync: false
+      - key: YOUTUBE_API_KEY
+        sync: false
+      - key: GEMINI_API_KEY
+        sync: false
