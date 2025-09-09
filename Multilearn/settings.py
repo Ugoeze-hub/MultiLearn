@@ -32,7 +32,7 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 # DEBUG = os.getenv('DEBUG', 'False').lower() == 'true'
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
+ALLOWED_HOSTS = ['127.0.0.1', 'multilearn-f2px.onrender.com','localhost']
 LOGIN_URL = '/login/' 
 LOGIN_REDIRECT_URL = 'quizzes:dashboard' 
 LOGOUT_REDIRECT_URL = 'home'
