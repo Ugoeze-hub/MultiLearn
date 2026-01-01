@@ -1,4 +1,4 @@
-# Multilearn 🎓
+# Multilearn 
 
 Multilearn is an innovative online learning platform designed to simplify the learning experience. With so many educational resources scattered across platforms like YouTube, Coursera, Udemy, and others, learners often waste time switching between sites and trying to keep track of where they left off. Multilearn solves this problem by bringing everything together in one place.
 
