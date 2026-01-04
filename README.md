@@ -25,3 +25,5 @@ Backend: Django (Python)
 Frontend: HTML, CSS, JavaScript
 
 Database: PostgreSQL
+
+### Project live now
